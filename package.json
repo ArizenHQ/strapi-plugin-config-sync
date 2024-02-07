@@ -26,6 +26,7 @@
   },
   "dependencies": {
     "chalk": "^4.1.2",
+    "child_process": "^1.0.2",
     "cli-table": "^0.3.6",
     "commander": "^8.3.0",
     "git-diff": "^2.0.6",
