@@ -8,12 +8,17 @@ module.exports = {
   },
 
   async updateConfiguration(newConfig) {
-    const configPath = path.join(strapi.dirs.extensions, 'config-sync', 'config', 'settings.json');
-    const currentConfig = await this.getConfiguration();
-    const updatedConfig = { ...currentConfig, ...newConfig };
+    try {
+        const configPath = path.join(strapi.dirs.extensions, 'config-sync', 'config', 'settings.json');
+        const currentConfig = await this.getConfiguration();
+        const updatedConfig = { ...currentConfig, ...newConfig };
 
-    await fs.promises.writeFile(configPath, JSON.stringify(updatedConfig, null, 2), 'utf8');
+        await fs.writeFile(configPath, JSON.stringify(updatedConfig, null, 2), 'utf8');
 
-    return updatedConfig;
+        return updatedConfig;
+    } catch (error) {
+        console.error("Erreur lors de la mise à jour de la configuration :", error);
+        throw new Error("La mise à jour de la configuration a échoué");
+    }
   },
 };
