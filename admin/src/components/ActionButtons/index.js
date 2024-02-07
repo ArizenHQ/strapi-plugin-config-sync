@@ -8,7 +8,7 @@ import { useNotification } from '@strapi/helper-plugin';
 import { useIntl } from 'react-intl';
 
 import ConfirmModal from '../ConfirmModal';
-import { exportAllConfig, importAllConfig } from '../../state/actions/Config';
+import { exportAllConfig, importAllConfig, deployProductionConfig } from '../../state/actions/Config';
 
 const ActionButtons = () => {
   const dispatch = useDispatch();
@@ -36,6 +36,9 @@ const ActionButtons = () => {
       <Button disabled={isEmpty(partialDiff)} onClick={() => openModal('export')}>
         {formatMessage({ id: 'config-sync.Buttons.Export' })}
       </Button>
+      <Button disabled={isEmpty(partialDiff)} onClick={() => openModal('deploy-production')}>
+        {formatMessage({ id: 'config-sync.Buttons.DeployProduction' })}
+      </Button>
       {!isEmpty(partialDiff) && (
         <h4 style={{ display: 'inline' }}>{Object.keys(partialDiff).length} {Object.keys(partialDiff).length === 1 ? "config change" : "config changes"}</h4>
       )}
@@ -43,7 +46,21 @@ const ActionButtons = () => {
         isOpen={modalIsOpen}
         onClose={closeModal}
         type={actionType}
-        onSubmit={(force) => actionType === 'import' ? dispatch(importAllConfig(partialDiff, force, toggleNotification)) : dispatch(exportAllConfig(partialDiff, toggleNotification))}
+        onSubmit={(force) => {
+          switch (actionType) {
+            case 'import':
+              dispatch(importAllConfig(partialDiff, force, toggleNotification));
+              break;
+            case 'export':
+              dispatch(exportAllConfig(partialDiff, toggleNotification));
+              break;
+            case 'deploy-production':
+              dispatch(deployProductionConfig(partialDiff, toggleNotification));
+              break;
+            default:
+              console.error(`Type d'action non reconnu: ${actionType}`);
+          }
+        }}
       />
     </ActionButtonsStyling>
   );
