@@ -254,6 +254,16 @@ const ConfigType = class ConfigType {
     // The main.importAllConfig service will loop the core-store.importSingle service.
     await strapi.plugin('config-sync').service('main').exportAllConfig(this.configPrefix);
   }
+
+    /**
+   * Export all core-store config to files.
+   *
+   * @returns {void}
+   */
+  deployProduction = async () => {
+    // The main.importAllConfig service will loop the core-store.importSingle service.
+    await strapi.plugin('config-sync').service('main').deployProductionConfig(this.configPrefix);
+  }
 };
 
 module.exports = ConfigType;
