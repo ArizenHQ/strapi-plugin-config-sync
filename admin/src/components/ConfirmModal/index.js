@@ -33,8 +33,17 @@ const ConfirmModal = ({ isOpen, onClose, onSubmit, type }) => {
         <Stack size={2}>
           <Flex justifyContent="center">
             <Typography variant="omega" id="confirm-description" style={{ textAlign: 'center' }}>
-              {formatMessage({ id: `config-sync.popUpWarning.warning.${type}_1`, defaultMessage: "If you continue all your local config files" })}<br />
-              {formatMessage({ id: `config-sync.popUpWarning.warning.${type}_2`, defaultMessage: "will be imported into the database." })}
+              {type === 'deploy-production' ? (
+                <>
+                  {formatMessage({ id: `config-sync.popUpWarning.warning.deploy_1`, defaultMessage: "Deploying to production will apply all configuration changes" })}<br />
+                  {formatMessage({ id: `config-sync.popUpWarning.warning.deploy_2`, defaultMessage: "and cannot be undone. Are you sure you want to continue?" })}
+                </>
+              ) : (
+                <>
+                  {formatMessage({ id: `config-sync.popUpWarning.warning.${type}_1`, defaultMessage: "If you continue all your local config files" })}<br />
+                  {formatMessage({ id: `config-sync.popUpWarning.warning.${type}_2`, defaultMessage: "will be imported into the database." })}
+                </>
+              )}
             </Typography>
           </Flex>
         </Stack>
