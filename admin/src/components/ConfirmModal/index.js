@@ -21,6 +21,19 @@ const ConfirmModal = ({ isOpen, onClose, onSubmit, type }) => {
   const [force, setForce] = useState(false);
   const { formatMessage } = useIntl();
 
+  const getButtonMessage = () => {
+    switch (type) {
+      case 'import':
+        return "Yes, import";
+      case 'export':
+        return "Yes, export";
+      case 'deploy-production':
+        return "Yes, deploy to production";
+      default:
+        return "Confirm";
+    }
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -82,7 +95,7 @@ const ConfirmModal = ({ isOpen, onClose, onSubmit, type }) => {
               onSubmit(force);
             }}
           >
-            {formatMessage({ id: `config-sync.popUpWarning.button.${type}`, defaultMessage: type === 'import' ? "Yes, import" : "Yes, export" })}
+            {formatMessage({ id: `config-sync.popUpWarning.button.${type}`, defaultMessage: getButtonMessage(type) })}
           </Button>
         )} />
     </Dialog>
