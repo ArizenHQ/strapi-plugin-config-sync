@@ -9,6 +9,20 @@ const { isEmpty } = require('lodash');
 
 module.exports = {
   /**
+   * Deploy all config, from db to filesystem.
+   *
+   * @param {object} ctx - Request context object.
+   * @returns {void}
+   */
+  deployProduction: async (ctx) => {
+    await strapi.plugin('config-sync').service('main').deployProductionConfig(ctx.request.body.config);
+
+    ctx.send({
+      message: 'Config was successfully deployed to production.',
+    });
+  },
+
+  /**
    * Export all config, from db to filesystem.
    *
    * @param {object} ctx - Request context object.
