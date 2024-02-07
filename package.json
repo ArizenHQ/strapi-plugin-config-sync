@@ -22,7 +22,7 @@
     "playground:install": "cd playground && yarn install",
     "playground:build": "cd playground && yarn build",
     "playground:develop": "cd playground && yarn develop",
-    "release": "npm run playground:build && release-it"
+    "release": "release-it"
   },
   "dependencies": {
     "chalk": "^4.1.2",
