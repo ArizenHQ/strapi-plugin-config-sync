@@ -36,7 +36,7 @@ const ActionButtons = () => {
       <Button disabled={isEmpty(partialDiff)} onClick={() => openModal('export')}>
         {formatMessage({ id: 'config-sync.Buttons.Export', defaultMessage: 'Export' })}
       </Button>
-      <Button disabled={isEmpty(partialDiff)} onClick={() => openModal('deploy-production')}>
+      <Button disabled={!isEmpty(partialDiff)} onClick={() => openModal('deploy-production')}>
         {formatMessage({ id: 'config-sync.Buttons.DeployProduction', defaultMessage: 'Deploy to production' })}
       </Button>
       {!isEmpty(partialDiff) && (

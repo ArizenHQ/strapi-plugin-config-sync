@@ -8,8 +8,7 @@ const NoChanges = () => {
     <NoContent
       content={{
         id: 'emptyState',
-        defaultMessage:
-          formatMessage({ id: 'config-sync.NoChanges.Message' }),
+        defaultMessage: formatMessage({ id: 'config-sync.NoChanges.Message', defaultMessage: "No differences between DB and sync directory. You are up-to-date!" }),
       }}
     />
   );
