@@ -5,6 +5,7 @@ import pluginPermissions from './permissions';
 // import pluginIcon from './components/PluginIcon';
 // import getTrad from './helpers/getTrad';
 
+console.log("pluginId:", pluginId);
 const pluginDescription = pluginPkg.strapi.description || pluginPkg.description;
 const { name } = pluginPkg.strapi;
 
