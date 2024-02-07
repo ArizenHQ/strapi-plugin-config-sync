@@ -4,6 +4,7 @@ module.exports = {
       const config = await strapi.plugin('config-sync').service('configuration').getConfiguration();
       ctx.send({ config });
     } catch (err) {
+      console.error("getConfiguration ~ err:", err);
       ctx.send({ error: err.message }, 500);
     }
   },
@@ -14,6 +15,7 @@ module.exports = {
       await strapi.plugin('config-sync').service('configuration').updateConfiguration(newConfig);
       ctx.send({ message: 'Configuration updated successfully' });
     } catch (err) {
+      console.error("updateConfiguration ~ err:", err);
       ctx.send({ error: err.message }, 500);
     }
   },
