@@ -37,18 +37,6 @@
     "redux-thunk": "^2.3.0",
     "release-it": "^17.0.3"
   },
-  "author": {
-    "name": "Boaz Poolman",
-    "email": "info@boazpoolman.nl",
-    "url": "https://github.com/boazpoolman"
-  },
-  "maintainers": [
-    {
-      "name": "Boaz Poolman",
-      "email": "info@boazpoolman.nl",
-      "url": "https://github.com/boazpoolman"
-    }
-  ],
   "files": [
     "admin",
     "server",
@@ -101,5 +89,17 @@
   "repository": {
     "type": "git",
     "url": "git://github.com/arizenhq/strapi-plugin-config-sync.git"
-  }
+  },
+  "author": {
+    "name": "Boaz Poolman",
+    "email": "info@boazpoolman.nl",
+    "url": "https://github.com/boazpoolman"
+  },
+  "maintainers": [
+    {
+      "name": "Alexandre Ouicher",
+      "email": "aouicher@cobalt.fr",
+      "url": "https://github.com/aouicber"
+    }
+  ]
 }
