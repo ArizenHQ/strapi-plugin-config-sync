@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box, TextInput, FieldLabel, Button } from '@strapi/design-system';
+import { TextInput, Card, Button } from '@strapi/design-system';
 import { request } from '@strapi/helper-plugin';
 
 const GithubRepoForm = ({ value, onChange }) => {
@@ -21,8 +21,7 @@ const GithubRepoForm = ({ value, onChange }) => {
   };
 
   return (
-    <Box>
-      <FieldLabel htmlFor="githubRepo">Github Repository</FieldLabel>
+    <Card>
       <TextInput
         id="githubRepo"
         value={githubRepo}
@@ -31,7 +30,7 @@ const GithubRepoForm = ({ value, onChange }) => {
         label="Github Repository"
       />
       <Button onClick={handleSave}>Save Configuration</Button>
-    </Box>
+    </Card>
   );
 };
 
