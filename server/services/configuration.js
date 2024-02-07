@@ -17,8 +17,8 @@ module.exports = {
 
         return updatedConfig;
     } catch (error) {
-        console.error("Erreur lors de la mise à jour de la configuration :", error);
-        throw new Error("La mise à jour de la configuration a échoué");
+        console.error("Error updating configuration:", error);
+        throw new Error("Configuration update failed");
     }
   },
 };
