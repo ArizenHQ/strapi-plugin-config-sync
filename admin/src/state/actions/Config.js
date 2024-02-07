@@ -104,3 +104,18 @@ export function setAppEnvInState(value) {
     value,
   };
 }
+export function deployProductionConfig(toggleNotification) {
+  return async function(dispatch) {
+    dispatch(setLoadingState(true));
+    try {
+      const { message } = await request('/config-sync/deploy-production', {
+        method: 'POST',
+      });
+      toggleNotification({ type: 'success', message });
+      dispatch(setLoadingState(false));
+    } catch (err) {
+      toggleNotification({ type: 'warning', message: { id: 'notification.error' } });
+      dispatch(setLoadingState(false));
+    }
+  };
+}
