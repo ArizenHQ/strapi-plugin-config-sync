@@ -28,6 +28,7 @@ const GithubRepoForm = ({ value, onChange }) => {
         value={githubRepo}
         onChange={(e) => setGithubRepo(e.target.value)}
         placeholder="Enter the GitHub repository URL"
+        label="Github Repository"
       />
       <Button onClick={handleSave}>Save Configuration</Button>
     </Box>
