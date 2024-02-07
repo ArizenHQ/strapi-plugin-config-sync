@@ -3,6 +3,7 @@
 const { isEmpty } = require('lodash');
 const fs = require('fs');
 const util = require('util');
+const { exec } = require('child_process');
 const difference = require('../utils/getObjectDiff');
 const { logMessage } = require('../utils');
 
@@ -286,4 +287,42 @@ module.exports = () => ({
 
     return formattedDiff;
   },
+
+  /**
+   * Deploy production config.
+   * This function deploys the production configuration by executing Git commands to add, commit, and push changes to the repository.
+   *
+   * @returns {Promise<void>} A promise that resolves when the deployment process is complete.
+   */
+  deployProductionConfig: async () => {
+    const syncDir = strapi.config.get('plugin.config-sync.syncDir');
+    const commitMessage = 'Deploy production config';
+
+    // Change directory to the sync directory.
+    process.chdir(syncDir);
+
+    // Execute Git commands to add, commit, and push changes.
+    const commands = [
+      'git add .',
+      `git commit -m "${commitMessage}"`,
+      'git push origin master',
+    ];
+
+    // Replace the for loop with this code
+    await commands.reduce(async (previousPromise, command) => {
+      await previousPromise;
+      return new Promise((resolve, reject) => {
+        exec(command, (error, stdout, stderr) => {
+          if (error) {
+            console.error(`exec error: ${error}`);
+            return reject(error);
+          }
+          console.log(`stdout: ${stdout}`);
+          console.error(`stderr: ${stderr}`);
+          resolve();
+        });
+      });
+    }, Promise.resolve());
+  },
 });
+

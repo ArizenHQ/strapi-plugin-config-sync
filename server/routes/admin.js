@@ -35,5 +35,13 @@ module.exports = {
         policies: [],
       },
     },
+    {
+      method: "POST",
+      path: "/deploy-production",
+      handler: "config.deployProduction",
+      config: {
+        policies: [],
+      },
+    },
   ],
 };
