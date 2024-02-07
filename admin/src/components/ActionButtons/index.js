@@ -31,13 +31,13 @@ const ActionButtons = () => {
   return (
     <ActionButtonsStyling>
       <Button disabled={isEmpty(partialDiff)} onClick={() => openModal('import')}>
-        {formatMessage({ id: 'config-sync.Buttons.Import' })}
+        {formatMessage({ id: 'config-sync.Buttons.Import', defaultMessage: 'Import' })}
       </Button>
       <Button disabled={isEmpty(partialDiff)} onClick={() => openModal('export')}>
-        {formatMessage({ id: 'config-sync.Buttons.Export' })}
+        {formatMessage({ id: 'config-sync.Buttons.Export', defaultMessage: 'Export' })}
       </Button>
       <Button disabled={isEmpty(partialDiff)} onClick={() => openModal('deploy-production')}>
-        {formatMessage({ id: 'config-sync.Buttons.DeployProduction' })}
+        {formatMessage({ id: 'config-sync.Buttons.DeployProduction', defaultMessage: 'Deploy to production' })}
       </Button>
       {!isEmpty(partialDiff) && (
         <h4 style={{ display: 'inline' }}>{Object.keys(partialDiff).length} {Object.keys(partialDiff).length === 1 ? "config change" : "config changes"}</h4>

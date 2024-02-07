@@ -15,8 +15,8 @@ const HeaderComponent = () => {
   return (
     <Box background="neutral100">
       <HeaderLayout
-        title={formatMessage({ id: 'config-sync.Header.Title' })}
-        subtitle={formatMessage({ id: 'config-sync.Header.Description' })}
+        title={formatMessage({ id: 'config-sync.Header.Title', defaultMessage: "Config Sync" })}
+        subtitle={formatMessage({ id: 'config-sync.Header.Description', defaultMessage: "Manage your database config across environments." })}
         as="h2"
       />
     </Box>

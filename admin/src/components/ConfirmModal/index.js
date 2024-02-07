@@ -26,15 +26,15 @@ const ConfirmModal = ({ isOpen, onClose, onSubmit, type }) => {
   return (
     <Dialog
       onClose={onClose}
-      title={formatMessage({ id: "config-sync.popUpWarning.Confirmation" })}
+      title={formatMessage({ id: "config-sync.popUpWarning.Confirmation", defaultMessage: "Confirmation" })}
       isOpen={isOpen}
     >
       <DialogBody icon={<ExclamationMarkCircle />}>
         <Stack size={2}>
           <Flex justifyContent="center">
             <Typography variant="omega" id="confirm-description" style={{ textAlign: 'center' }}>
-              {formatMessage({ id: `config-sync.popUpWarning.warning.${type}_1` })}<br />
-              {formatMessage({ id: `config-sync.popUpWarning.warning.${type}_2` })}
+              {formatMessage({ id: `config-sync.popUpWarning.warning.${type}_1`, defaultMessage: "If you continue all your local config files" })}<br />
+              {formatMessage({ id: `config-sync.popUpWarning.warning.${type}_2`, defaultMessage: "will be imported into the database." })}
             </Typography>
           </Flex>
         </Stack>
@@ -49,7 +49,7 @@ const ConfirmModal = ({ isOpen, onClose, onSubmit, type }) => {
               name="force"
               hint="Check this to ignore the soft setting."
             >
-              {formatMessage({ id: 'config-sync.popUpWarning.force' })}
+              {formatMessage({ id: 'config-sync.popUpWarning.force', defaultMessage: "Force" })}
             </Checkbox>
           </Box>
         </React.Fragment>
@@ -62,7 +62,7 @@ const ConfirmModal = ({ isOpen, onClose, onSubmit, type }) => {
             }}
             variant="tertiary"
           >
-            {formatMessage({ id: 'config-sync.popUpWarning.button.cancel' })}
+            {formatMessage({ id: 'config-sync.popUpWarning.button.cancel', defaultMessage: "Cancel" })}
           </Button>
         )}
         endAction={(
@@ -73,7 +73,7 @@ const ConfirmModal = ({ isOpen, onClose, onSubmit, type }) => {
               onSubmit(force);
             }}
           >
-            {formatMessage({ id: `config-sync.popUpWarning.button.${type}` })}
+            {formatMessage({ id: `config-sync.popUpWarning.button.${type}`, defaultMessage: type === 'import' ? "Yes, import" : "Yes, export" })}
           </Button>
         )} />
     </Dialog>

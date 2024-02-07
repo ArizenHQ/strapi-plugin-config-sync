@@ -36,17 +36,17 @@ const ConfigList = ({ diff, isLoading }) => {
       diff.fileConfig[configName]
       && diff.databaseConfig[configName]
     ) {
-      return formatMessage({ id: 'config-sync.ConfigList.Different' });
+      return formatMessage({ id: 'config-sync.ConfigList.Different', defaultMessage: 'Different' });
     } else if (
       diff.fileConfig[configName]
       && !diff.databaseConfig[configName]
     ) {
-      return formatMessage({ id: 'config-sync.ConfigList.OnlyDir' });
+      return formatMessage({ id: 'config-sync.ConfigList.OnlyDir', defaultMessage: 'Only in sync dir' });
     } else if (
       !diff.fileConfig[configName]
       && diff.databaseConfig[configName]
     ) {
-      return formatMessage({ id: 'config-sync.ConfigList.OnlyDB' });
+      return formatMessage({ id: 'config-sync.ConfigList.OnlyDB', defaultMessage: 'Only in DB' });
     }
   };
 
@@ -99,7 +99,7 @@ const ConfigList = ({ diff, isLoading }) => {
   if (isLoading) {
     return (
       <div style={{ textAlign: 'center', marginTop: 40 }}>
-        <Loader>{formatMessage({ id: 'config-sync.ConfigList.Loading' })}</Loader>
+        <Loader>{formatMessage({ id: 'config-sync.ConfigList.Loading', defaultMessage: 'Loading content...' })}</Loader>
       </div>
     );
   }
@@ -129,20 +129,20 @@ const ConfigList = ({ diff, isLoading }) => {
           <Tr>
             <Th>
               <BaseCheckbox
-                aria-label={formatMessage({ id: 'config-sync.ConfigList.SelectAll' })}
+                aria-label={formatMessage({ id: 'config-sync.ConfigList.SelectAll', defaultMessage: 'Select all' })}
                 indeterminate={isIndeterminate}
                 onValueChange={(value) => setCheckedItems(checkedItems.map(() => value))}
                 value={allChecked}
               />
             </Th>
             <Th>
-              <Typography variant="sigma">{formatMessage({ id: 'config-sync.ConfigList.ConfigName' })}</Typography>
+              <Typography variant="sigma">{formatMessage({ id: 'config-sync.ConfigList.ConfigName', defaultMessage: 'Config name' })}</Typography>
             </Th>
             <Th>
-              <Typography variant="sigma">{formatMessage({ id: 'config-sync.ConfigList.ConfigType' })}</Typography>
+              <Typography variant="sigma">{formatMessage({ id: 'config-sync.ConfigList.ConfigName', defaultMessage: 'Config name' })}</Typography>
             </Th>
             <Th>
-              <Typography variant="sigma">{formatMessage({ id: 'config-sync.ConfigList.State' })}</Typography>
+              <Typography variant="sigma">{formatMessage({ id: 'config-sync.ConfigList.State', defaultMessage: 'State' })}</Typography>
             </Th>
           </Tr>
         </Thead>

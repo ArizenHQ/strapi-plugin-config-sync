@@ -5,7 +5,6 @@ import pluginPermissions from './permissions';
 // import pluginIcon from './components/PluginIcon';
 // import getTrad from './helpers/getTrad';
 
-console.log("pluginId:", pluginId);
 const pluginDescription = pluginPkg.strapi.description || pluginPkg.description;
 const { name } = pluginPkg.strapi;
 
@@ -55,7 +54,6 @@ export default {
           /* webpackChunkName: "config-sync-translation-[request]" */ `./translations/${locale}.json`
         )
           .then(({ default: data }) => {
-            console.log(".then ~ data:", data);
             return {
               data: prefixPluginTranslations(data, pluginId),
               locale,

@@ -28,10 +28,10 @@ const ConfigDiff = ({ isOpen, onClose, oldValue, newValue, configName }) => {
       <ModalBody>
         <Grid paddingBottom={4} style={{ textAlign: 'center' }}>
           <GridItem col={6}>
-            <Typography variant="delta">{formatMessage({ id: 'config-sync.ConfigDiff.SyncDirectory' })}</Typography>
+            <Typography variant="delta">{formatMessage({ id: 'config-sync.ConfigDiff.SyncDirectory', defaultMessage: 'Sync directory' })}</Typography>
           </GridItem>
           <GridItem col={6}>
-            <Typography variant="delta">{formatMessage({ id: 'config-sync.ConfigDiff.Database' })}</Typography>
+            <Typography variant="delta">{formatMessage({ id: 'config-sync.ConfigDiff.Database', defaultMessage: 'Database' })}</Typography>
           </GridItem>
         </Grid>
         <ReactDiffViewer

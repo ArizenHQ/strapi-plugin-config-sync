@@ -24,10 +24,9 @@ const FirstExport = () => {
       <NoContent
         content={{
           id: 'emptyState',
-          defaultMessage:
-          formatMessage({ id: 'config-sync.FirstExport.Message' }),
+          defaultMessage: formatMessage({ id: 'config-sync.FirstExport.Message', defaultMessage: "Looks like this is your first time using config-sync for this project." }),
         }}
-        action={<Button onClick={() => setModalIsOpen(true)}>{formatMessage({ id: 'config-sync.FirstExport.Button' })}</Button>}
+        action={<Button onClick={() => setModalIsOpen(true)}>{formatMessage({ id: 'config-sync.FirstExport.Button', defaultMessage: "Make the initial export" })}</Button>}
       />
     </div>
   );
