@@ -43,5 +43,21 @@ module.exports = {
         policies: [],
       },
     },
+    {
+      method: 'GET',
+      path: '/configuration',
+      handler: 'configuration.getConfiguration',
+      config: {
+        policies: [],
+      },
+    },
+    {
+      method: 'POST',
+      path: '/configuration',
+      handler: 'configuration.updateConfiguration',
+      config: {
+        policies: [],
+      },
+    },
   ],
 };

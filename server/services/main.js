@@ -298,17 +298,30 @@ module.exports = () => ({
     const syncDir = strapi.config.get('plugin.config-sync.syncDir');
     const commitMessage = 'Deploy production config';
 
+    // Assuming you have stored the user's email and name in Strapi's configuration
+    const userEmail = strapi.config.get('user.email'); // Replace with the actual configuration key
+    const userName = strapi.config.get('user.name'); // Replace with the actual configuration key
+
+    // Make sure userEmail and userName are not empty
+    if (!userEmail || !userName) {
+      console.error('User information is not available.');
+      return;
+    }
+
     // Change directory to the sync directory.
     process.chdir(syncDir);
 
-    // Execute Git commands to add, commit, and push changes.
+    const branchName = `deploy-config-${Date.now()}`; // Creates a unique branch name
     const commands = [
+      `git config --global user.email "${userEmail}"`,
+      `git config --global user.name "${userName}"`,
+      `git checkout -b ${branchName}`, // Creates and switches to a new branch
       'git add .',
       `git commit -m "${commitMessage}"`,
-      'git push origin master',
+      `git push -u origin ${branchName}`, // Pushes the branch to the remote repository
     ];
 
-    // Replace the for loop with this code
+    // Execute the commands
     await commands.reduce(async (previousPromise, command) => {
       await previousPromise;
       return new Promise((resolve, reject) => {
@@ -323,6 +336,34 @@ module.exports = () => ({
         });
       });
     }, Promise.resolve());
+
+    // After pushing the branch, use the GitHub API to create a PR
+    const createPR = async () => {
+      const data = {
+        title: 'Deployment of production configuration',
+        head: branchName,
+        base: 'master', // The branch you want to merge your branch into
+        body: 'Please check the changes before merging.',
+      };
+      const { githubRepositoryConfigSync } = strapi.config.get('plugin.config-sync');
+
+      const response = await fetch(githubRepositoryConfigSync, {
+        method: 'POST',
+        headers: {
+          Authorization: `token ${process.env.GITHUB_TOKEN}`, // Make sure to have a GitHub personal access token and store it securely
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to create the PR');
+      }
+
+      const prData = await response.json();
+      console.log(`PR created: ${prData.html_url}`);
+    };
+
+    await createPR();
   },
 });
-

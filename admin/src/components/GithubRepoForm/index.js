@@ -1,0 +1,37 @@
+import React, { useState } from "react";
+import { Box, TextInput, FieldLabel, Button } from '@strapi/design-system';
+import { request } from '@strapi/helper-plugin';
+
+const GithubRepoForm = ({ value, onChange }) => {
+  const [githubRepo, setGithubRepo] = useState(value);
+
+  const handleSave = async () => {
+    try {
+      const data = await request('/config-sync/configuration', {
+        method: 'POST',
+        body: {
+          githubRepositoryConfigSync: githubRepo,
+        },
+      });
+      console.log('Configuration mise à jour avec succès:', data);
+      onChange(githubRepo);
+    } catch (error) {
+      console.error('Erreur lors de la mise à jour de la configuration:', error);
+    }
+  };
+
+  return (
+    <Box>
+      <FieldLabel htmlFor="githubRepo">Github Repository</FieldLabel>
+      <TextInput
+        id="githubRepo"
+        value={githubRepo}
+        onChange={(e) => setGithubRepo(e.target.value)}
+        placeholder="Enter the GitHub repository URL"
+      />
+      <Button onClick={handleSave}>Save Configuration</Button>
+    </Box>
+  );
+};
+
+export default GithubRepoForm;

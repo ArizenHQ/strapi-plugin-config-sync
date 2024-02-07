@@ -15,6 +15,7 @@ module.exports = {
       "core-store.strapi_content_types_schema",
       "core-store.ee_information",
     ],
+    githubRepositoryConfigSync: "git@github.com:ArizenHQ/coinhouse-cms.git",
   },
   validator() {},
 };
