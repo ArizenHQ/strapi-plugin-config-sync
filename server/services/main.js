@@ -353,6 +353,7 @@ module.exports = () => ({
         body: 'Please check the changes before merging.',
       };
       const { githubRepositoryConfigSync } = config;
+      console.log("createPR ~ process.env:", process.env);
 
       const response = await fetch(githubRepositoryConfigSync, {
         method: 'POST',
