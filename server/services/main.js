@@ -296,13 +296,12 @@ module.exports = () => ({
    * @returns {Promise<void>} A promise that resolves when the deployment process is complete.
    */
   deployProductionConfig: async (user) => {
-    console.log("deployProductionConfig: ~ user:", user);
     const syncDir = strapi.config.get('plugin.config-sync.syncDir');
     const commitMessage = 'Deploy production sync';
 
     // Assuming you have stored the user's email and name in Strapi's configuration
     const userEmail = user.email; // Replace with the actual configuration key
-    const userName = user.name; // Replace with the actual configuration key
+    const userName = `${user.firstname} ${user.lastname}`; // Replace with the actual configuration key
 
     // Make sure userEmail and userName are not empty
     if (!userEmail || !userName) {
