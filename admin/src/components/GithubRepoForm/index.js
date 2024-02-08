@@ -8,11 +8,11 @@ const GithubRepoForm = ({ value, onChange }) => {
   useEffect(() => {
     const loadConfig = async () => {
       try {
-        const data = await request('/config-sync/settings', {
+        const { config } = await request('/config-sync/settings', {
           method: 'GET',
         });
-        if (data.githubRepositoryConfigSync) {
-          setGithubRepo(data.githubRepositoryConfigSync);
+        if (config.githubRepositoryConfigSync) {
+          setGithubRepo(config.githubRepositoryConfigSync);
         }
       } catch (error) {
         console.error('Erreur lors de la récupération de la configuration:', error);
