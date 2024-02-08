@@ -320,12 +320,12 @@ module.exports = () => ({
 
     const branchName = `deploy-config-${Date.now()}`; // Creates a unique branch name
     const commands = [
-      `git config --global user.email "${userEmail}"`,
-      `git config --global user.name "${userName}"`,
-      `git checkout -b ${branchName}`, // Creates and switches to a new branch
-      'git add .',
-      `git commit -m "${commitMessage}"`,
-      `git push -u origin ${branchName}`, // Pushes the branch to the remote repository
+      `git config user.email "${userEmail}"`,
+      `git config user.name "${userName}"`,
+      `git -C "${syncDir}" checkout -b ${branchName}`, // Creates and switches to a new branch
+      `git -C "${syncDir}" add .`,
+      `git -C "${syncDir}" commit -m "${commitMessage}"`,
+      `git -C "${syncDir}" push -u origin ${branchName}`, // Pushes the branch to the remote repository
     ];
 
     // Execute the commands
