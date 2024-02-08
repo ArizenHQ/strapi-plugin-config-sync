@@ -3,7 +3,7 @@ module.exports = {
     try {
       const config = await strapi
         .plugin("config-sync")
-        .service("configuration")
+        .service("settings")
         .getSettings();
       ctx.send({ config });
     } catch (err) {
@@ -17,7 +17,7 @@ module.exports = {
       const newConfig = ctx.request.body;
       await strapi
         .plugin("config-sync")
-        .service("configuration")
+        .service("settings")
         .setSettings(newConfig);
       ctx.send({ message: "Configuration updated successfully" });
     } catch (err) {

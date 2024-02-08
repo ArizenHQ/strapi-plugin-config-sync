@@ -45,16 +45,16 @@ module.exports = {
     },
     {
       method: 'GET',
-      path: '/configuration',
-      handler: 'configuration.getSettings',
+      path: '/settings',
+      handler: 'settings.getSettings',
       config: {
         policies: [],
       },
     },
     {
       method: 'POST',
-      path: '/configuration',
-      handler: 'configuration.setSettings',
+      path: '/settings',
+      handler: 'settings.setSettings',
       config: {
         policies: [],
       },
