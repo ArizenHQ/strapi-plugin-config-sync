@@ -1,7 +1,5 @@
 'use strict';
 
-const { createCoreService } = require('@strapi/strapi').factories;
-
 function getPluginStore() {
   return strapi.store({
     environment: '',
@@ -18,10 +16,7 @@ async function createDefaultConfig() {
   return pluginStore.get({ key: 'settings' });
 }
 
-module.exports = createCoreService('plugin::config-sync.configuration', {
-  async count() {
-    return strapi.query('plugin::config-sync.configuration').count();
-  },
+module.exports = {
   async getSettings() {
     const pluginStore = getPluginStore();
     let config = await pluginStore.get({ key: 'settings' });
@@ -36,4 +31,4 @@ module.exports = createCoreService('plugin::config-sync.configuration', {
     await pluginStore.set({ key: 'settings', value });
     return pluginStore.get({ key: 'settings' });
   },
-});
+};

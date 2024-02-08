@@ -1,35 +1,29 @@
-const { createCoreController } = require("@strapi/strapi").factories;
-
-module.exports = createCoreController("plugin::config-sync.configuration", {
-  async count(ctx) {
-    ctx.body = await strapi
-      .plugin("config-sync")
-      .service("configuration")
-      .count();
-  },
+module.exports = {
   async getSettings(ctx) {
     try {
-      ctx.body = await strapi
+      const config = await strapi
         .plugin("config-sync")
         .service("configuration")
         .getSettings();
+      ctx.send({ config });
     } catch (err) {
-      ctx.throw(500, err);
+      console.error("getConfiguration ~ err:", err);
+      ctx.send({ error: err.message }, 500);
     }
   },
+
   async setSettings(ctx) {
-    const { body } = ctx.request;
     try {
+      const newConfig = ctx.request.body;
       await strapi
         .plugin("config-sync")
         .service("configuration")
-        .setSettings(body);
-      ctx.body = await strapi
-        .plugin("config-sync")
-        .service("configuration")
-        .getSettings();
+        .setSettings(newConfig);
+      ctx.send({ message: "Configuration updated successfully" });
     } catch (err) {
-      ctx.throw(500, err);
+      console.error("updateConfiguration ~ err:", err);
+      ctx.send({ error: err.message }, 500);
     }
   },
-});
+};
+
