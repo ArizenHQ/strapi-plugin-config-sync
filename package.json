@@ -1,6 +1,6 @@
 {
   "name": "@arizenhq/strapi-plugin-config-sync",
-  "version": "3.0.8",
+  "version": "3.0.9",
   "description": "Migrate your config data across environments using the CLI or Strapi admin panel.",
   "strapi": {
     "displayName": "Config Sync ArizenHQ",
@@ -45,7 +45,6 @@
     "strapi-admin.js",
     "strapi-server.js"
   ],
-
   "devDependencies": {
     "@strapi/strapi": "^4.12.5",
     "@strapi/design-system": "^1.14.1",
