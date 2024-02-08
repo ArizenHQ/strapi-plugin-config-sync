@@ -15,11 +15,20 @@ module.exports = {
    * @returns {void}
    */
   deployProduction: async (ctx) => {
-    await strapi.plugin('config-sync').service('main').deployProductionConfig(ctx.state.user);
+    try {
+      await strapi.plugin('config-sync').service('main').deployProductionConfig(ctx.state.user);
 
-    ctx.send({
-      message: 'Config was successfully deployed to production.',
-    });
+      ctx.send({
+        message: 'Config was successfully deployed to production.',
+      });
+    } catch (error) {
+      console.error(`Failed to deploy production config. Error: ${error.message}`);
+      ctx.send({
+        message: `Failed to deploy production config. Error: ${error.message}`,
+        statusCode: 400,
+        error: `Failed to deploy production config. Error: ${error.message}`,
+      });
+    }
   },
 
   /**

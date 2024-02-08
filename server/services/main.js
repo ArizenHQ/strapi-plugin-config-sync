@@ -359,8 +359,8 @@ module.exports = () => ({
 
           if (!response.ok) {
             const errorBody = await response.text();
-            console.error(`Failed to create the PR. Status: ${response.status}, Body: ${errorBody}`);
-            throw new Error(`Failed to create the PR. Status: ${response.status}, Body: ${errorBody}`);
+            console.error(`Failed to send the PR. Status: ${response.status}, Body: ${errorBody}`);
+            throw new Error(`Failed to send the PR. Status: ${response.status}, Body: ${errorBody}`);
           }
 
           const prData = await response.json();
@@ -375,7 +375,7 @@ module.exports = () => ({
       const PR = await createPR();
       return PR;
     } else {
-      console.error("L'URL du dépôt GitHub n'a pas pu être parsée.");
+      console.error("Failed to parse GitHub repository URL.");
       throw new Error("Failed to parse GitHub repository URL.");
     }
   },
