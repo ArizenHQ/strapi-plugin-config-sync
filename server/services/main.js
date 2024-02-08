@@ -302,10 +302,10 @@ module.exports = () => ({
       type: 'plugin',
       name: 'config-sync',
     });
-    const config = await pluginStore.get({ key: 'settings' });
+    const { githubRepositoryConfigSync } = await pluginStore.get({ key: 'settings' });
 
     const regex = /(?:https:\/\/github\.com\/|git@github\.com:)([^/]+)\/([^.]+)\.git/;
-    const match = config.githubRepositoryConfigSync.match(regex);
+    const match = githubRepositoryConfigSync.match(regex);
 
     if (match) {
       const orga = match[1];
@@ -340,21 +340,21 @@ module.exports = () => ({
 
       const createPR = async () => {
         const data = {
-          title: 'Deployment of production configuration',
+          title: 'Deployment+of+production+configuration',
           head: branchName,
           base: 'master',
-          body: 'Please check the changes before merging.',
+          body: 'Please+check+the+changes+before+merging',
         };
-        const { githubRepositoryConfigSync } = config;
 
         try {
-          const response = await fetch(githubRepositoryConfigSync, {
-            method: 'POST',
+
+          const urlPullRequest = `https://github.com/${orga}/${repo}/compare/${data.base}...${branchName}?quick_pull=1&title=${data.title}&body=${data.body}.`;
+          const response = await fetch(urlPullRequest, {
+            method: 'GET',
             headers: {
               Authorization: `token ${process.env.GITHUB_TOKEN}`,
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify(data),
           });
 
           if (!response.ok) {
