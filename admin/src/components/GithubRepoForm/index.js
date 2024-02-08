@@ -8,7 +8,7 @@ const GithubRepoForm = ({ value, onChange }) => {
   useEffect(() => {
     const loadConfig = async () => {
       try {
-        const data = await request('/config-sync/configuration', {
+        const data = await request('/config-sync/settings', {
           method: 'GET',
         });
         if (data.githubRepositoryConfigSync) {
@@ -24,7 +24,7 @@ const GithubRepoForm = ({ value, onChange }) => {
 
   const handleSave = async () => {
     try {
-      const data = await request('/config-sync/configuration', {
+      const data = await request('/config-sync/settings', {
         method: 'POST',
         body: {
           githubRepositoryConfigSync: githubRepo,

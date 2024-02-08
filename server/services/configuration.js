@@ -1,18 +1,39 @@
-module.exports = {
-  async getConfiguration() {
-    const config = await strapi.plugins['config-sync'].config;
+'use strict';
+
+const { createCoreService } = require('@strapi/strapi').factories;
+
+function getPluginStore() {
+  return strapi.store({
+    environment: '',
+    type: 'plugin',
+    name: 'config-sync',
+  });
+}
+async function createDefaultConfig() {
+  const pluginStore = getPluginStore();
+  const value = {
+    disabled: false,
+  };
+  await pluginStore.set({ key: 'settings', value });
+  return pluginStore.get({ key: 'settings' });
+}
+
+module.exports = createCoreService('plugin::config-sync.configuration', {
+  async count() {
+    return strapi.query('plugin::config-sync.configuration').count();
+  },
+  async getSettings() {
+    const pluginStore = getPluginStore();
+    let config = await pluginStore.get({ key: 'settings' });
+    if (!config) {
+      config = await createDefaultConfig();
+    }
     return config;
   },
-
-  async updateConfiguration(config) {
-    try {
-      await Promise.all(
-        Object.entries(config).map(([key, value]) => strapi.plugin('config-sync').config.set(key, value))
-      );
-      return config;
-    } catch (error) {
-        console.error("Error updating configuration:", error);
-        throw new Error("Configuration update failed");
-    }
+  async setSettings(settings) {
+    const value = settings;
+    const pluginStore = getPluginStore();
+    await pluginStore.set({ key: 'settings', value });
+    return pluginStore.get({ key: 'settings' });
   },
-};
+});

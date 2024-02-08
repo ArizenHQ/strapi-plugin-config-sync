@@ -25,6 +25,7 @@
     "release": "release-it"
   },
   "dependencies": {
+    "@strapi/strapi": "^4.20.0",
     "chalk": "^4.1.2",
     "child_process": "^1.0.2",
     "cli-table": "^0.3.6",
@@ -44,10 +45,9 @@
     "strapi-admin.js",
     "strapi-server.js"
   ],
-  "peerDependencies": {
-    "@strapi/strapi": "^4.0.0"
-  },
+
   "devDependencies": {
+    "@strapi/strapi": "^4.12.5",
     "@strapi/design-system": "^1.14.1",
     "@strapi/helper-plugin": "^4.12.5",
     "@strapi/icons": "^1.14.1",
