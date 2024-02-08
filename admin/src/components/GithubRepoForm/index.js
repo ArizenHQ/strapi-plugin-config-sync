@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { TextInput, Card, Button } from '@strapi/design-system';
+import { TextInput, Card, Button, Box } from '@strapi/design-system';
 import { request } from '@strapi/helper-plugin';
 
 const GithubRepoForm = ({ value, onChange }) => {
@@ -21,7 +21,7 @@ const GithubRepoForm = ({ value, onChange }) => {
   };
 
   return (
-    <Card padding={4} marginBottom={2}>
+    <Card padding={4} marginBottom={4}>
       <TextInput
         id="githubRepo"
         value={githubRepo}
@@ -29,7 +29,9 @@ const GithubRepoForm = ({ value, onChange }) => {
         placeholder="Enter the GitHub repository URL"
         label="Github Repository"
       />
-      <Button onClick={handleSave}>Save Configuration</Button>
+      <Box marginTop={2}>
+        <Button onClick={handleSave}>Save Configuration</Button>
+      </Box>
     </Card>
   );
 };
