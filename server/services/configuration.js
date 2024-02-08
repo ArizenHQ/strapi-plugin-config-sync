@@ -4,11 +4,12 @@ module.exports = ({ strapi }) => ({
     return config;
   },
 
-  async updateConfiguration(newConfig) {
-    console.log("updateConfiguration ~ newConfig:", newConfig);
+  async updateConfiguration(config) {
     try {
-      //await strapi.plugin('my-plugin').config.set(key, value);
-
+      await Promise.all(
+        Object.entries(config).map(([key, value]) => strapi.plugin('config-sync').config.set(key, value))
+      );
+      return config;
     } catch (error) {
         console.error("Error updating configuration:", error);
         throw new Error("Configuration update failed");
