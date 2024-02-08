@@ -21,7 +21,7 @@ const GithubRepoForm = ({ value, onChange }) => {
   };
 
   return (
-    <Card>
+    <Card padding={4} marginBottom={2}>
       <TextInput
         id="githubRepo"
         value={githubRepo}

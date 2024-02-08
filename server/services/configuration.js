@@ -1,24 +1,17 @@
-const path = require('path');
-const fs = require('fs').promises;
-
-module.exports = {
+module.exports = ({ strapi }) => ({
   async getConfiguration() {
     const config = await strapi.plugins['config-sync'].config;
     return config;
   },
 
   async updateConfiguration(newConfig) {
+    console.log("updateConfiguration ~ newConfig:", newConfig);
     try {
-        const configPath = path.join(strapi.dirs.extensions, 'config-sync', 'config', 'settings.json');
-        const currentConfig = await this.getConfiguration();
-        const updatedConfig = { ...currentConfig, ...newConfig };
+      //await strapi.plugin('my-plugin').config.set(key, value);
 
-        await fs.writeFile(configPath, JSON.stringify(updatedConfig, null, 2), 'utf8');
-
-        return updatedConfig;
     } catch (error) {
         console.error("Error updating configuration:", error);
         throw new Error("Configuration update failed");
     }
   },
-};
+});
