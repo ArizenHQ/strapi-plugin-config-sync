@@ -15,7 +15,7 @@ module.exports = {
    * @returns {void}
    */
   deployProduction: async (ctx) => {
-    await strapi.plugin('config-sync').service('main').deployProductionConfig(ctx.request.body.config);
+    await strapi.plugin('config-sync').service('main').deployProductionConfig(ctx.state.user);
 
     ctx.send({
       message: 'Config was successfully deployed to production.',

@@ -292,24 +292,31 @@ module.exports = () => ({
    * Deploy production config.
    * This function deploys the production configuration by executing Git commands to add, commit, and push changes to the repository.
    *
+   * @param {string} user - The user initiating the deployment.
    * @returns {Promise<void>} A promise that resolves when the deployment process is complete.
    */
-  deployProductionConfig: async () => {
+  deployProductionConfig: async (user) => {
     const syncDir = strapi.config.get('plugin.config-sync.syncDir');
-    const commitMessage = 'Deploy production config';
+    const commitMessage = 'Deploy production sync';
 
     // Assuming you have stored the user's email and name in Strapi's configuration
-    const userEmail = strapi.config.get('user.email'); // Replace with the actual configuration key
-    const userName = strapi.config.get('user.name'); // Replace with the actual configuration key
+    const userEmail = user.email; // Replace with the actual configuration key
+    const userName = user.name; // Replace with the actual configuration key
 
     // Make sure userEmail and userName are not empty
     if (!userEmail || !userName) {
       console.error('User information is not available.');
-      return;
+      throw new Error('Failed to create the PR. (User information is not available)');
     }
 
     // Change directory to the sync directory.
     process.chdir(syncDir);
+    const pluginStore = strapi.store({
+      environment: '',
+      type: 'plugin',
+      name: 'config-sync',
+    });
+    const config = await pluginStore.get({ key: 'settings' });
 
     const branchName = `deploy-config-${Date.now()}`; // Creates a unique branch name
     const commands = [
@@ -345,7 +352,7 @@ module.exports = () => ({
         base: 'master', // The branch you want to merge your branch into
         body: 'Please check the changes before merging.',
       };
-      const { githubRepositoryConfigSync } = strapi.config.get('plugin.config-sync');
+      const { githubRepositoryConfigSync } = config;
 
       const response = await fetch(githubRepositoryConfigSync, {
         method: 'POST',
