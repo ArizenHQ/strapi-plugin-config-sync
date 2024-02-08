@@ -46,7 +46,7 @@ module.exports = {
     {
       method: 'GET',
       path: '/configuration',
-      handler: 'configuration.getConfiguration',
+      handler: 'configuration.getSettings',
       config: {
         policies: [],
       },
@@ -54,7 +54,7 @@ module.exports = {
     {
       method: 'POST',
       path: '/configuration',
-      handler: 'configuration.updateConfiguration',
+      handler: 'configuration.setSettings',
       config: {
         policies: [],
       },
