@@ -309,6 +309,8 @@ module.exports = () => ({
       throw new Error('Failed to create the PR. (User information is not available)');
     }
 
+    console.log("createPR ~ process.env:", process.env);
+
     // Change directory to the sync directory.
     process.chdir(syncDir);
     const pluginStore = strapi.store({
@@ -353,7 +355,6 @@ module.exports = () => ({
         body: 'Please check the changes before merging.',
       };
       const { githubRepositoryConfigSync } = config;
-      console.log("createPR ~ process.env:", process.env);
 
       const response = await fetch(githubRepositoryConfigSync, {
         method: 'POST',
