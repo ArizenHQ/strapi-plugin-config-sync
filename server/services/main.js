@@ -326,6 +326,7 @@ module.exports = () => ({
       `git -C "." checkout -b ${branchName}`, // Creates and switches to a new branch
       `git -C "." add .`,
       `git -C "." commit -m "${commitMessage}"`,
+      `git remote set-url origin https://${process.env.GITHUB_TOKEN}:x-oauth-basic@${config.githubRepositoryConfigSync.replace(/^git:\/\/|https:\/\//, '')}`,
       `git -C "." push -u origin ${branchName}`, // Pushes the branch to the remote repository
     ];
 
