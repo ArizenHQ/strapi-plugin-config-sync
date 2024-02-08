@@ -323,10 +323,10 @@ module.exports = () => ({
     const commands = [
       `git config user.email "${userEmail}"`,
       `git config user.name "${userName}"`,
-      `git -C "${syncDir}" checkout -b ${branchName}`, // Creates and switches to a new branch
-      `git -C "${syncDir}" add .`,
-      `git -C "${syncDir}" commit -m "${commitMessage}"`,
-      `git -C "${syncDir}" push -u origin ${branchName}`, // Pushes the branch to the remote repository
+      `git -C "." checkout -b ${branchName}`, // Creates and switches to a new branch
+      `git -C "." add .`,
+      `git -C "." commit -m "${commitMessage}"`,
+      `git -C "." push -u origin ${branchName}`, // Pushes the branch to the remote repository
     ];
 
     // Execute the commands
@@ -355,23 +355,34 @@ module.exports = () => ({
       };
       const { githubRepositoryConfigSync } = config;
 
-      const response = await fetch(githubRepositoryConfigSync, {
-        method: 'POST',
-        headers: {
-          Authorization: `token ${process.env.GITHUB_TOKEN}`, // Make sure to have a GitHub personal access token and store it securely
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
+      try {
+        const response = await fetch(githubRepositoryConfigSync, {
+          method: 'POST',
+          headers: {
+            Authorization: `token ${process.env.GITHUB_TOKEN}`, // Assurez-vous d'avoir un jeton d'accès personnel GitHub et de le stocker en toute sécurité
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        });
 
-      if (!response.ok) {
-        throw new Error('Failed to create the PR');
+        if (!response.ok) {
+          // Capture et affiche des informations d'erreur plus détaillées
+          const errorBody = await response.text(); // ou response.json() si l'API renvoie du JSON
+          console.error(`Failed to create the PR. Status: ${response.status}, Body: ${errorBody}`);
+          throw new Error(`Failed to create the PR. Status: ${response.status}, Body: ${errorBody}`);
+        }
+
+        const prData = await response.json();
+        console.log(`PR created: ${prData.html_url}`);
+        return `PR created: ${prData.html_url}`;
+      } catch (error) {
+        // Gestion des erreurs de réseau ou d'exécution de fetch
+        console.error(`Error during PR creation: ${error.message}`);
+        throw new Error(`Error during PR creation: ${error.message}`);
       }
-
-      const prData = await response.json();
-      console.log(`PR created: ${prData.html_url}`);
     };
 
-    await createPR();
+    const PR = await createPR();
+    return PR;
   },
 });
