@@ -1,4 +1,4 @@
-module.exports = ({ strapi }) => ({
+module.exports = {
   async getConfiguration() {
     const config = await strapi.plugins['config-sync'].config;
     return config;
@@ -15,4 +15,4 @@ module.exports = ({ strapi }) => ({
         throw new Error("Configuration update failed");
     }
   },
-});
+};
