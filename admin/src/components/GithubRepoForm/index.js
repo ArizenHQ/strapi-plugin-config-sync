@@ -1,9 +1,26 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { TextInput, Card, Button, Box } from '@strapi/design-system';
 import { request } from '@strapi/helper-plugin';
 
 const GithubRepoForm = ({ value, onChange }) => {
   const [githubRepo, setGithubRepo] = useState(value);
+
+  useEffect(() => {
+    const loadConfig = async () => {
+      try {
+        const data = await request('/config-sync/configuration', {
+          method: 'GET',
+        });
+        if (data.githubRepositoryConfigSync) {
+          setGithubRepo(data.githubRepositoryConfigSync);
+        }
+      } catch (error) {
+        console.error('Erreur lors de la récupération de la configuration:', error);
+      }
+    };
+
+    loadConfig();
+  }, []);
 
   const handleSave = async () => {
     try {
