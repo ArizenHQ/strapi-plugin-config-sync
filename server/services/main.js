@@ -21,14 +21,11 @@ module.exports = () => ({
    * @returns {void}
    */
   writeConfigFile: async (configType, configName, fileContents) => {
-    // Check if the config should be excluded.
     const shouldExclude = !isEmpty(strapi.config.get('plugin.config-sync.excludedConfig').filter((option) => `${configType}.${configName}`.startsWith(option)));
     if (shouldExclude) return;
 
-    // Replace reserved characters in filenames.
     configName = configName.replace(/:/g, "#").replace(/\//g, "$");
 
-    // Check if the JSON content should be minified.
     const json = !strapi.config.get('plugin.config-sync').minify
       ? JSON.stringify(fileContents, null, 2)
       : JSON.stringify(fileContents);
@@ -40,12 +37,8 @@ module.exports = () => ({
     const writeFile = util.promisify(fs.writeFile);
     await writeFile(`${strapi.config.get('plugin.config-sync.syncDir')}${configType}.${configName}.json`, json)
       .then(() => {
-        // @TODO:
-        // Add logging for successfull config export.
       })
       .catch(() => {
-        // @TODO:
-        // Add logging for failed config export.
       });
   },
 
@@ -56,11 +49,9 @@ module.exports = () => ({
    * @returns {void}
    */
    deleteConfigFile: async (configName) => {
-    // Check if the config should be excluded.
     const shouldExclude = !isEmpty(strapi.config.get('plugin.config-sync.excludedConfig').filter((option) => configName.startsWith(option)));
     if (shouldExclude) return;
 
-    // Replace reserved characters in filenames.
     configName = configName.replace(/:/g, "#").replace(/\//g, "$");
 
     fs.unlinkSync(`${strapi.config.get('plugin.config-sync.syncDir')}${configName}.json`);
@@ -74,7 +65,6 @@ module.exports = () => ({
    * @returns {object} The JSON content of the config file.
    */
   readConfigFile: async (configType, configName) => {
-    // Replace reserved characters in filenames.
     configName = configName.replace(/:/g, "#").replace(/\//g, "$");
 
     const readFile = util.promisify(fs.readFile);
@@ -105,10 +95,9 @@ module.exports = () => ({
       const fileConfigs = {};
 
       await Promise.all(configFiles.map(async (file) => {
-        const type = file.split('.')[0]; // Grab the first part of the filename.
-        const name = file.split(/\.(.+)/)[1].split('.').slice(0, -1).join('.'); // Grab the rest of the filename minus the file extension.
+        const type = file.split('.')[0];
+        const name = file.split(/\.(.+)/)[1].split('.').slice(0, -1).join('.');
 
-        // Put back reserved characters from filenames.
         const formattedName = name.replace(/#/g, ":").replace(/\$/g, "/");
 
         if (
@@ -174,8 +163,8 @@ module.exports = () => ({
     const diff = difference(databaseConfig, fileConfig);
 
     await Promise.all(Object.keys(diff).map(async (file) => {
-      const type = file.split('.')[0]; // Grab the first part of the filename.
-      const name = file.split(/\.(.+)/)[1]; // Grab the rest of the filename.
+      const type = file.split('.')[0];
+      const name = file.split(/\.(.+)/)[1];
 
       if (configType && configType !== type) {
         return;
@@ -199,8 +188,8 @@ module.exports = () => ({
     const diff = difference(databaseConfig, fileConfig);
 
     await Promise.all(Object.keys(diff).map(async (file) => {
-      const type = file.split('.')[0]; // Grab the first part of the filename.
-      const name = file.split(/\.(.+)/)[1]; // Grab the rest of the filename.
+      const type = file.split('.')[0];
+      const name = file.split(/\.(.+)/)[1];
 
       if (configType && configType !== type) {
         return;
@@ -219,12 +208,11 @@ module.exports = () => ({
    * @returns {void}
    */
   importSingleConfig: async (configName, onSuccess, force) => {
-    // Check if the config should be excluded.
     const shouldExclude = !isEmpty(strapi.config.get('plugin.config-sync.excludedConfig').filter((option) => configName.startsWith(option)));
     if (shouldExclude) return;
 
-    const type = configName.split('.')[0]; // Grab the first part of the filename.
-    const name = configName.split(/\.(.+)/)[1]; // Grab the rest of the filename.
+    const type = configName.split('.')[0];
+    const name = configName.split(/\.(.+)/)[1];
     const fileContents = await strapi.plugin('config-sync').service('main').readConfigFile(type, name);
 
     try {
@@ -244,12 +232,11 @@ module.exports = () => ({
    * @returns {void}
    */
    exportSingleConfig: async (configName, onSuccess) => {
-     // Check if the config should be excluded.
     const shouldExclude = !isEmpty(strapi.config.get('plugin.config-sync.excludedConfig').filter((option) => configName.startsWith(option)));
     if (shouldExclude) return;
 
-    const type = configName.split('.')[0]; // Grab the first part of the filename.
-    const name = configName.split(/\.(.+)/)[1]; // Grab the rest of the filename.
+    const type = configName.split('.')[0];
+    const name = configName.split(/\.(.+)/)[1];
 
     try {
       await strapi.plugin('config-sync').types[type].exportSingle(configName);
@@ -299,11 +286,9 @@ module.exports = () => ({
     const syncDir = strapi.config.get('plugin.config-sync.syncDir');
     const commitMessage = 'Deploy production sync';
 
-    // Assuming you have stored the user's email and name in Strapi's configuration
-    const userEmail = user.email; // Replace with the actual configuration key
-    const userName = `${user.firstname} ${user.lastname}`; // Replace with the actual configuration key
+    const userEmail = user.email;
+    const userName = `${user.firstname} ${user.lastname}`;
 
-    // Make sure userEmail and userName are not empty
     if (!userEmail || !userName) {
       console.error('User information is not available.');
       throw new Error('Failed to create the PR. (User information is not available)');
@@ -327,18 +312,17 @@ module.exports = () => ({
       const repo = match[2];
       const gitUrl = `https://${process.env.GITHUB_TOKEN}@github.com/${orga}/${repo}.git`;
 
-      const branchName = `deploy-config-${Date.now()}`; // Creates a unique branch name
+      const branchName = `deploy-config-${Date.now()}`;
       const commands = [
         `git config user.email "${userEmail}"`,
         `git config user.name "${userName}"`,
-        `git -C "." checkout -b ${branchName}`, // Creates and switches to a new branch
+        `git -C "." checkout -b ${branchName}`,
         `git -C "." add .`,
         `git -C "." commit -m "${commitMessage}"`,
         `git remote set-url origin ${gitUrl}`,
-        `git -C "." push -u origin ${branchName}`, // Pushes the branch to the remote repository
+        `git -C "." push -u origin ${branchName}`,
       ];
 
-      // Execute the commands
       await commands.reduce(async (previousPromise, command) => {
         await previousPromise;
         return new Promise((resolve, reject) => {
@@ -354,12 +338,11 @@ module.exports = () => ({
         });
       }, Promise.resolve());
 
-      // After pushing the branch, use the GitHub API to create a PR
       const createPR = async () => {
         const data = {
           title: 'Deployment of production configuration',
           head: branchName,
-          base: 'master', // The branch you want to merge your branch into
+          base: 'master',
           body: 'Please check the changes before merging.',
         };
         const { githubRepositoryConfigSync } = config;
@@ -368,15 +351,14 @@ module.exports = () => ({
           const response = await fetch(githubRepositoryConfigSync, {
             method: 'POST',
             headers: {
-              Authorization: `token ${process.env.GITHUB_TOKEN}`, // Assurez-vous d'avoir un jeton d'accès personnel GitHub et de le stocker en toute sécurité
+              Authorization: `token ${process.env.GITHUB_TOKEN}`,
               'Content-Type': 'application/json',
             },
             body: JSON.stringify(data),
           });
 
           if (!response.ok) {
-            // Capture et affiche des informations d'erreur plus détaillées
-            const errorBody = await response.text(); // ou response.json() si l'API renvoie du JSON
+            const errorBody = await response.text();
             console.error(`Failed to create the PR. Status: ${response.status}, Body: ${errorBody}`);
             throw new Error(`Failed to create the PR. Status: ${response.status}, Body: ${errorBody}`);
           }
@@ -385,7 +367,6 @@ module.exports = () => ({
           console.log(`PR created: ${prData.html_url}`);
           return `PR created: ${prData.html_url}`;
         } catch (error) {
-          // Gestion des erreurs de réseau ou d'exécution de fetch
           console.error(`Error during PR creation: ${error.message}`);
           throw new Error(`Error during PR creation: ${error.message}`);
         }
