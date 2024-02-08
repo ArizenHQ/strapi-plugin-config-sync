@@ -23,11 +23,7 @@ module.exports = {
       });
     } catch (error) {
       console.error(`Failed to deploy production config. Error: ${error.message}`);
-      ctx.send({
-        message: `Failed to deploy production config. Error: ${error.message}`,
-        statusCode: 400,
-        error: `Failed to deploy production config. Error: ${error.message}`,
-      });
+      ctx.throw(400, `Failed to deploy production config. Error: ${error.message}`);
     }
   },
 
