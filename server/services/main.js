@@ -311,7 +311,6 @@ module.exports = () => ({
 
     console.log("createPR ~ process.env:", process.env);
 
-    // Change directory to the sync directory.
     process.chdir(syncDir);
     const pluginStore = strapi.store({
       environment: '',
