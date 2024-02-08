@@ -1,9 +1,9 @@
 'use strict';
 
 const main = require('./main');
-const configuration = require('./configuration');
+const settings = require('./settings');
 
 module.exports = {
   main,
-  configuration,
+  settings,
 };
