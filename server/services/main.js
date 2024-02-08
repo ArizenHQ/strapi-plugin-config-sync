@@ -319,71 +319,84 @@ module.exports = () => ({
     });
     const config = await pluginStore.get({ key: 'settings' });
 
-    const branchName = `deploy-config-${Date.now()}`; // Creates a unique branch name
-    const commands = [
-      `git config user.email "${userEmail}"`,
-      `git config user.name "${userName}"`,
-      `git -C "." checkout -b ${branchName}`, // Creates and switches to a new branch
-      `git -C "." add .`,
-      `git -C "." commit -m "${commitMessage}"`,
-      `git remote set-url origin https://${process.env.GITHUB_TOKEN}:x-oauth-basic@${config.githubRepositoryConfigSync.replace(/^git:\/\/|https:\/\//, '')}`,
-      `git -C "." push -u origin ${branchName}`, // Pushes the branch to the remote repository
-    ];
+    const regex = /(?:https:\/\/github\.com\/|git@github\.com:)([^/]+)\/([^.]+)\.git/;
+    const match = config.githubRepositoryConfigSync.match(regex);
 
-    // Execute the commands
-    await commands.reduce(async (previousPromise, command) => {
-      await previousPromise;
-      return new Promise((resolve, reject) => {
-        exec(command, (error, stdout, stderr) => {
-          if (error) {
-            console.error(`exec error: ${error}`);
-            return reject(error);
+    if (match) {
+      const orga = match[1];
+      const repo = match[2];
+      const gitUrl = `https://${process.env.GITHUB_TOKEN}@github.com/${orga}/${repo}.git`;
+
+      const branchName = `deploy-config-${Date.now()}`; // Creates a unique branch name
+      const commands = [
+        `git config user.email "${userEmail}"`,
+        `git config user.name "${userName}"`,
+        `git -C "." checkout -b ${branchName}`, // Creates and switches to a new branch
+        `git -C "." add .`,
+        `git -C "." commit -m "${commitMessage}"`,
+        `git remote set-url origin ${gitUrl}`,
+        `git -C "." push -u origin ${branchName}`, // Pushes the branch to the remote repository
+      ];
+
+      // Execute the commands
+      await commands.reduce(async (previousPromise, command) => {
+        await previousPromise;
+        return new Promise((resolve, reject) => {
+          exec(command, (error, stdout, stderr) => {
+            if (error) {
+              console.error(`exec error: ${error}`);
+              return reject(error);
+            }
+            console.log(`stdout: ${stdout}`);
+            console.error(`stderr: ${stderr}`);
+            resolve();
+          });
+        });
+      }, Promise.resolve());
+
+      // After pushing the branch, use the GitHub API to create a PR
+      const createPR = async () => {
+        const data = {
+          title: 'Deployment of production configuration',
+          head: branchName,
+          base: 'master', // The branch you want to merge your branch into
+          body: 'Please check the changes before merging.',
+        };
+        const { githubRepositoryConfigSync } = config;
+
+        try {
+          const response = await fetch(githubRepositoryConfigSync, {
+            method: 'POST',
+            headers: {
+              Authorization: `token ${process.env.GITHUB_TOKEN}`, // Assurez-vous d'avoir un jeton d'accès personnel GitHub et de le stocker en toute sécurité
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+          });
+
+          if (!response.ok) {
+            // Capture et affiche des informations d'erreur plus détaillées
+            const errorBody = await response.text(); // ou response.json() si l'API renvoie du JSON
+            console.error(`Failed to create the PR. Status: ${response.status}, Body: ${errorBody}`);
+            throw new Error(`Failed to create the PR. Status: ${response.status}, Body: ${errorBody}`);
           }
-          console.log(`stdout: ${stdout}`);
-          console.error(`stderr: ${stderr}`);
-          resolve();
-        });
-      });
-    }, Promise.resolve());
 
-    // After pushing the branch, use the GitHub API to create a PR
-    const createPR = async () => {
-      const data = {
-        title: 'Deployment of production configuration',
-        head: branchName,
-        base: 'master', // The branch you want to merge your branch into
-        body: 'Please check the changes before merging.',
-      };
-      const { githubRepositoryConfigSync } = config;
-
-      try {
-        const response = await fetch(githubRepositoryConfigSync, {
-          method: 'POST',
-          headers: {
-            Authorization: `token ${process.env.GITHUB_TOKEN}`, // Assurez-vous d'avoir un jeton d'accès personnel GitHub et de le stocker en toute sécurité
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(data),
-        });
-
-        if (!response.ok) {
-          // Capture et affiche des informations d'erreur plus détaillées
-          const errorBody = await response.text(); // ou response.json() si l'API renvoie du JSON
-          console.error(`Failed to create the PR. Status: ${response.status}, Body: ${errorBody}`);
-          throw new Error(`Failed to create the PR. Status: ${response.status}, Body: ${errorBody}`);
+          const prData = await response.json();
+          console.log(`PR created: ${prData.html_url}`);
+          return `PR created: ${prData.html_url}`;
+        } catch (error) {
+          // Gestion des erreurs de réseau ou d'exécution de fetch
+          console.error(`Error during PR creation: ${error.message}`);
+          throw new Error(`Error during PR creation: ${error.message}`);
         }
+      };
 
-        const prData = await response.json();
-        console.log(`PR created: ${prData.html_url}`);
-        return `PR created: ${prData.html_url}`;
-      } catch (error) {
-        // Gestion des erreurs de réseau ou d'exécution de fetch
-        console.error(`Error during PR creation: ${error.message}`);
-        throw new Error(`Error during PR creation: ${error.message}`);
-      }
-    };
-
-    const PR = await createPR();
-    return PR;
+      const PR = await createPR();
+      return PR;
+    } else {
+      console.error("L'URL du dépôt GitHub n'a pas pu être parsée.");
+      throw new Error("Failed to parse GitHub repository URL.");
+    }
   },
 });
+
