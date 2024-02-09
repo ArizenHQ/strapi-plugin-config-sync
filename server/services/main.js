@@ -297,6 +297,7 @@ module.exports = () => ({
     console.log("createPR ~ process.env:", process.env);
 
     process.chdir(syncDir);
+    console.log("deployProductionConfig: ~ syncDir:", syncDir);
     const pluginStore = strapi.store({
       environment: '',
       type: 'plugin',
