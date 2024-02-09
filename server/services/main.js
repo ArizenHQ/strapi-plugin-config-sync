@@ -321,7 +321,7 @@ module.exports = () => ({
         `git -C "." commit -m "${commitMessage}"`,
         `git remote set-url origin ${gitUrl}`,
         `git -C "." push -u origin ${branchName}`,
-        `git -C "." checkout -b master`,
+        `git -C "." checkout master`,
       ];
 
       await commands.reduce(async (previousPromise, command) => {
