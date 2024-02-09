@@ -283,9 +283,7 @@ module.exports = () => ({
    * @returns {Promise<void>} A promise that resolves when the deployment process is complete.
    */
   deployProductionConfig: async (user) => {
-    const syncDir = strapi.config.get('plugin.config-sync.syncDir');
     const commitMessage = 'Deploy production sync';
-
     const userEmail = user.email;
     const userName = `${user.firstname} ${user.lastname}`;
 
@@ -294,10 +292,6 @@ module.exports = () => ({
       throw new Error('Failed to create the PR. (User information is not available)');
     }
 
-    console.log("createPR ~ process.env:", process.env);
-
-    process.chdir(syncDir);
-    console.log("deployProductionConfig: ~ syncDir:", syncDir);
     const pluginStore = strapi.store({
       environment: '',
       type: 'plugin',
@@ -311,7 +305,6 @@ module.exports = () => ({
     if (match) {
       const orga = match[1];
       const repo = match[2];
-      const gitUrl = `https://${process.env.GITHUB_TOKEN}@github.com/${orga}/${repo}.git`;
 
       const branchName = `deploy-config-${Date.now()}`;
       const commands = [
@@ -320,7 +313,6 @@ module.exports = () => ({
         `git -C "." checkout -b ${branchName}`,
         `git -C "." add .`,
         `git -C "." commit -m "${commitMessage}"`,
-        `git remote set-url origin ${gitUrl}`,
         `git -C "." push -u origin ${branchName}`,
         `git -C "." checkout master`,
       ];
