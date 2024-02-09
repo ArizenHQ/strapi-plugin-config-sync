@@ -305,6 +305,7 @@ module.exports = () => ({
     if (match) {
       const orga = match[1];
       const repo = match[2];
+      const urlPush = `https://${process.env.GITHUB_TOKEN}@github.com/${orga}/${repo}.git`;
 
       const branchName = `deploy-config-${Date.now()}`;
       const commands = [
@@ -313,7 +314,7 @@ module.exports = () => ({
         `git -C "." checkout -b ${branchName}`,
         `git -C "." add .`,
         `git -C "." commit -m "${commitMessage}"`,
-        `git -C "." push -u origin ${branchName}`,
+        `git -C "." push ${urlPush} ${branchName}`,
         `git -C "." checkout master`,
       ];
 
