@@ -340,6 +340,8 @@ module.exports = () => ({
           base: 'master',
           body: 'Please check the changes before merging.',
         };
+        console.log("createPR ~ ${process.env.GITHUB_TOKEN:", process.env.GITHUB_TOKEN);
+        console.log("createPR ~ data:", data);
 
         try {
           const response = await fetch(`https://api.github.com/repos/${orga}/${repo}/pulls`, {
