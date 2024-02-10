@@ -307,18 +307,18 @@ module.exports = () => ({
     if (match) {
       const orga = match[1];
       const repo = match[2];
-      const urlPush = `https://${process.env.GITHUB_TOKEN}@github.com/${orga}/${repo}.git`;
+      const urlRepo = `https://${process.env.GITHUB_TOKEN}@github.com/${orga}/${repo}.git`;
 
       const branchName = `deploy-config-${Date.now()}`;
       const commands = [
         `git config user.email "${userEmail}"`,
         `git config user.name "${userName}"`,
         `git config --global --add safe.directory ${process.env.PWD}`,
-        `git fetch origin master`,
+        `git fetch ${urlRepo} master`,
         `git -C "." checkout -b ${branchName}`,
         `git -C "." add .`,
         `git -C "." diff --cached --exit-code || git -C "." commit -m "${commitMessage}"`,
-        `git -C "." push ${urlPush} ${branchName} --set-upstream`,
+        `git -C "." push ${urlRepo} ${branchName} --set-upstream`,
       ];
 
       await commands.reduce(async (previousPromise, command) => {
