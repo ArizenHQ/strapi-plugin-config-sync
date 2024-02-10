@@ -317,7 +317,7 @@ module.exports = () => ({
         `git -C "." checkout -b ${branchName}`,
         `git -C "." add .`,
         `git -C "." diff --cached --exit-code || git -C "." commit -m "${commitMessage}"`,
-        `git -C "." diff --quiet || git -C "." push ${urlPush} ${branchName} --set-upstream`,
+        `git -C "." push ${urlPush} ${branchName} --set-upstream`,
       ];
 
       await commands.reduce(async (previousPromise, command) => {
