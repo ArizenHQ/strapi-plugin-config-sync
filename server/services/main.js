@@ -343,7 +343,7 @@ module.exports = () => ({
         };
 
         try {
-
+          console.log("createPR ~ process.env.GITHUB_TOKEN:", process.env.GITHUB_TOKEN);
           const response = await fetch(`https://api.github.com/repos/${orga}/${repo}/pulls`, {
             method: 'POST',
             headers: {
