@@ -284,7 +284,7 @@ module.exports = () => ({
    */
   deployProductionConfig: async (user) => {
     const syncDir = strapi.config.get('plugin.config-sync.syncDir');
-    process.chdir(syncDir);
+    process.chdir(`${process.env.PWD}/${syncDir}`);
     const commitMessage = 'Deploy production sync';
     const userEmail = user.email;
     const userName = `${user.firstname} ${user.lastname}`;
@@ -343,11 +343,10 @@ module.exports = () => ({
         };
 
         try {
-          console.log("createPR ~ process.env:", process.env);
           const response = await fetch(`https://api.github.com/repos/${orga}/${repo}/pulls`, {
             method: 'POST',
             headers: {
-              Authorization: `token ${process.env.GITHUB_TOKEN}`,
+              Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
               'Content-Type': 'application/json',
             },
             body: JSON.stringify(data),
