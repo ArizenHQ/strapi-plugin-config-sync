@@ -311,10 +311,11 @@ module.exports = () => ({
 
       const branchName = `deploy-config-${Date.now()}`;
       const commands = [
-        `git config user.email "${userEmail}"`,
-        `git config user.name "${userName}"`,
-        `git config --global --add safe.directory ${process.env.PWD}`,
-        `git -C "." checkout -b ${branchName}`,
+        `git stash push -u -m "Modifications temporaires"`,
+        `git fetch origin master`,
+        `git reset --hard origin/master`,
+        `git checkout -b ${branchName}`,
+        `git stash pop`,
         `git -C "." add .`,
         `git -C "." diff --cached --exit-code || git -C "." commit -m "${commitMessage}"`,
         `git -C "." push ${urlPush} ${branchName} --set-upstream`,
