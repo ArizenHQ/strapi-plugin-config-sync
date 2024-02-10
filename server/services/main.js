@@ -290,7 +290,7 @@ module.exports = () => ({
     const userName = `${user.firstname} ${user.lastname}`;
 
     if (!userEmail || !userName) {
-      console.error('User information is not available.');
+      console.log('User information is not available.');
       throw new Error('Failed to create the PR. (User information is not available)');
     }
 
@@ -324,11 +324,9 @@ module.exports = () => ({
         return new Promise((resolve, reject) => {
           exec(command, (error, stdout, stderr) => {
             if (error) {
-              console.error(`exec error: ${error}`);
+              console.log(`exec error: ${error}`);
               return reject(error);
             }
-            console.log(`stdout: ${stdout}`);
-            console.error(`stderr: ${stderr}`);
             resolve();
           });
         });
@@ -347,6 +345,8 @@ module.exports = () => ({
             method: 'POST',
             headers: {
               Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
+              Accept: 'application/vnd.github+json',
+              'X-GitHub-Api-Version': '2022-11-28',
               'Content-Type': 'application/json',
             },
             body: JSON.stringify(data),
@@ -354,7 +354,7 @@ module.exports = () => ({
 
           if (!response.ok) {
             const errorBody = await response.text();
-            console.error(`Failed to send the PR. Status: ${response.status}, Body: ${errorBody}`);
+            console.log(`Failed to send the PR. Status: ${response.status}, Body: ${errorBody}`);
             throw new Error(`Failed to send the PR. Status: ${response.status}, Body: ${errorBody}`);
           }
 
@@ -362,7 +362,7 @@ module.exports = () => ({
           console.log(`PR created: ${prData.html_url}`);
           return `PR created: ${prData.html_url}`;
         } catch (error) {
-          console.error(`Error during PR creation: ${error.message}`);
+          console.log(`Error during PR creation: ${error.message}`);
           throw new Error(`Error during PR creation: ${error.message}`);
         }
       };
@@ -370,7 +370,7 @@ module.exports = () => ({
       const PR = await createPR();
       return PR;
     } else {
-      console.error("Failed to parse GitHub repository URL.");
+      console.log("Failed to parse GitHub repository URL.");
       throw new Error("Failed to parse GitHub repository URL.");
     }
   },
