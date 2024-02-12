@@ -314,7 +314,6 @@ module.exports = () => ({
         `git config user.email "${userEmail}"`,
         `git config user.name "${userName}"`,
         `git config --global --add safe.directory ${process.env.PWD}`,
-        `git pull ${urlRepo} master`,
         `git -C "." checkout -b ${branchName}`,
         `git -C "." add .`,
         `git -C "." diff --cached --exit-code || git -C "." commit -m "${commitMessage}"`,
