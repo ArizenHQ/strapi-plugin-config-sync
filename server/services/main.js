@@ -314,10 +314,11 @@ module.exports = () => ({
         `git config user.email "${userEmail}"`,
         `git config user.name "${userName}"`,
         `git config --global --add safe.directory ${process.env.PWD}`,
-        `git -C "." checkout -b ${branchName}`,
-        `git -C "." add .`,
-        `git -C "." diff --cached --exit-code || git -C "." commit -m "${commitMessage}"`,
-        `git -C "." push ${urlRepo} ${branchName} --set-upstream`,
+        `git checkout -b ${branchName}`,
+        'git reset origin/master',
+        `git add .`,
+        `git diff --cached --exit-code || git -C "." commit -m "${commitMessage}"`,
+        `git push ${urlRepo} ${branchName} --set-upstream`,
       ];
 
       await commands.reduce(async (previousPromise, command) => {
