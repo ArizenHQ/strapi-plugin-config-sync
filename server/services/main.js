@@ -95,6 +95,7 @@ module.exports = () => ({
       const fileConfigs = {};
 
       await Promise.all(configFiles.map(async (file) => {
+        if (!file) return;
         const type = file.split('.')[0];
         const name = file.split(/\.(.+)/)[1].split('.').slice(0, -1).join('.');
 
@@ -314,7 +315,6 @@ module.exports = () => ({
         `git config user.email "${userEmail}"`,
         `git config user.name "${userName}"`,
         `git config --global --add safe.directory ${process.env.PWD}`,
-        'git reset --hard origin/master',
         `git checkout -b ${branchName}`,
         `git add .`,
         `git diff --cached --exit-code || git -C "." commit -m "${commitMessage}"`,
