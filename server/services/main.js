@@ -326,7 +326,7 @@ module.exports = () => ({
       await commands.reduce(async (previousPromise, command) => {
         await previousPromise;
         return new Promise((resolve, reject) => {
-          exec(command, (error, stdout, stderr) => {
+          exec(command, { maxBuffer: 1024 * 1024 * 5 }, (error, stdout, stderr) => { // Increase maxBuffer to 5MB
             if (error) {
               console.log(`exec error: ${error}`);
               return reject(error);
