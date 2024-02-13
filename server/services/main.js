@@ -325,6 +325,7 @@ module.exports = () => ({
         await previousPromise;
         return new Promise((resolve, reject) => {
           exec(command, (error, stdout, stderr) => {
+            console.log("exec ~ stdout:", stdout, stderr);
             if (error) {
               console.log(`exec error: ${error}`);
               return reject(error);
