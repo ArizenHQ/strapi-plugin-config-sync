@@ -317,7 +317,7 @@ module.exports = () => ({
         `git config --global --add safe.directory ${process.env.PWD}`,
         `git checkout -b ${branchName}`,
         `git add .`,
-        `git diff --cached --exit-code || git -C "." commit -m "${commitMessage}"`,
+        `git diff --cached --exit-code || git commit -m "${commitMessage}"`,
         `git push ${urlRepo} ${branchName} --set-upstream`,
       ];
 
