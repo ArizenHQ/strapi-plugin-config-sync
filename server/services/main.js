@@ -301,11 +301,11 @@ module.exports = () => ({
       name: 'config-sync',
     });
     const { githubRepositoryConfigSync } = await pluginStore.get({ key: 'settings' });
-
     const regex = /(?:https:\/\/github\.com\/|git@github\.com:)([^/]+)\/([^.]+)\.git/;
     const match = githubRepositoryConfigSync.match(regex);
 
     if (match) {
+
       const orga = match[1];
       const repo = match[2];
       const urlRepo = `https://${process.env.GITHUB_TOKEN}@github.com/${orga}/${repo}.git`;
