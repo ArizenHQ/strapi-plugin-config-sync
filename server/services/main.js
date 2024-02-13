@@ -312,6 +312,8 @@ module.exports = () => ({
 
       const branchName = `deploy-config-${Date.now()}`;
       const commands = [
+        `pwd`,
+        `cd ${process.env.PWD}`,
         `git config user.email "${userEmail}"`,
         `git config user.name "${userName}"`,
         `git config --global --add safe.directory ${process.env.PWD}`,
