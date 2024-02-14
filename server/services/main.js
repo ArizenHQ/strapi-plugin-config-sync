@@ -95,7 +95,10 @@ module.exports = () => ({
       const fileConfigs = {};
 
       await Promise.all(configFiles.map(async (file) => {
-        if (!file) return;
+        if (typeof file === 'undefined') {
+          console.warn('Encountered undefined file name in configFiles array');
+          return; // Skip this iteration if file is undefined
+        }
         const type = file.split('.')[0];
         const name = file.split(/\.(.+)/)[1].split('.').slice(0, -1).join('.');
 
