@@ -288,8 +288,6 @@ module.exports = () => ({
    * @returns {Promise<void>} A promise that resolves when the deployment process is complete.
    */
   deployProductionConfig: async (user) => {
-    const syncDir = strapi.config.get('plugin.config-sync.syncDir');
-    process.chdir(`${process.env.PWD}/${syncDir}`);
     const commitMessage = 'Deploy production sync';
     const userEmail = user.email;
     const userName = `${user.firstname} ${user.lastname}`;
