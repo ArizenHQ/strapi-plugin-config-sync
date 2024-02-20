@@ -288,7 +288,7 @@ module.exports = () => ({
    * @returns {Promise<void>} A promise that resolves when the deployment process is complete.
    */
   deployProductionConfig: async (user) => {
-    const commitMessage = 'Deploy production sync';
+    const commitMessage = 'Config & Code generation to sync envs';
     const userEmail = user.email;
     const userName = `${user.firstname} ${user.lastname}`;
 
@@ -340,13 +340,11 @@ module.exports = () => ({
 
       const createPR = async () => {
         const data = {
-          title: 'Deployment of production configuration',
+          title: 'Config & Code generation to sync envs',
           head: branchName,
           base: 'master',
           body: 'Please check the changes before merging.',
         };
-        console.log("createPR ~ ${process.env.GITHUB_TOKEN:", process.env.GITHUB_TOKEN);
-        console.log("createPR ~ data:", data);
 
         try {
           const response = await fetch(`https://api.github.com/repos/${orga}/${repo}/pulls`, {

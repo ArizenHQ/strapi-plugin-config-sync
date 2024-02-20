@@ -37,7 +37,7 @@ const ActionButtons = () => {
         {formatMessage({ id: 'config-sync.Buttons.Export', defaultMessage: 'Export' })}
       </Button>
       <Button disabled={!isEmpty(partialDiff)} onClick={() => openModal('deploy-production')}>
-        {formatMessage({ id: 'config-sync.Buttons.DeployProduction', defaultMessage: 'Deploy to production' })}
+        {formatMessage({ id: 'config-sync.Buttons.DeployProduction', defaultMessage: 'Create Pull Request' })}
       </Button>
       {!isEmpty(partialDiff) && (
         <h4 style={{ display: 'inline' }}>{Object.keys(partialDiff).length} {Object.keys(partialDiff).length === 1 ? "config change" : "config changes"}</h4>

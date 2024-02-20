@@ -29,7 +29,7 @@
 
   "Buttons.Export": "Export",
   "Buttons.Import": "Import",
-  "Buttons.DeployProduction": "Deploy to production",
+  "Buttons.DeployProduction": "Create Pull Request",
 
   "FirstExport.Message": "Looks like this is your first time using config-sync for this project.",
   "FirstExport.Button": "Make the initial export",

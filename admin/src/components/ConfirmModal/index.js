@@ -28,7 +28,7 @@ const ConfirmModal = ({ isOpen, onClose, onSubmit, type }) => {
       case 'export':
         return "Yes, export";
       case 'deploy-production':
-        return "Yes, deploy to production";
+        return "Yes, Create Pull Request";
       default:
         return "Confirm";
     }
