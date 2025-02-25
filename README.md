@@ -1,5 +1,5 @@
 <div align="center">
-<h1>Strapi config-sync plugin</h1>
+<h1>Strapi config-sync plugin for Coinhouse</h1>
 	
 <p style="margin-top: 0;">This plugin is a multi-purpose tool to manage your Strapi database records through JSON files. Mostly used to version control <a href="#-config-types">config data</a> for automated deployment, automated tests and data sharing for collaboration purposes.</p>
 	
