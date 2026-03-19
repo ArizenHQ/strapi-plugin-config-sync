@@ -4,8 +4,23 @@ const { isEmpty } = require('lodash');
 const fs = require('fs');
 const util = require('util');
 const { exec } = require('child_process');
+const { createAppAuth } = require('@octokit/auth-app');
 const difference = require('../utils/getObjectDiff');
 const { logMessage } = require('../utils');
+
+const getGithubToken = async () => {
+  const appId = process.env.GH_APP_ID;
+  const privateKey = process.env.GH_APP_PRIVATE_KEY;
+  const installationId = process.env.GH_APP_INSTALLATION_ID;
+
+  if (!appId || !privateKey || !installationId) {
+    throw new Error('GitHub App credentials are missing. Set GH_APP_ID, GH_APP_PRIVATE_KEY, and GH_APP_INSTALLATION_ID env vars.');
+  }
+
+  const auth = createAppAuth({ appId, privateKey, installationId });
+  const { token } = await auth({ type: 'installation' });
+  return token;
+};
 
 /**
  * Main services for config import/export.
@@ -310,7 +325,8 @@ module.exports = () => ({
     if (match) {
       const orga = match[1];
       const repo = match[2];
-      const urlRepo = `https://${process.env.GITHUB_TOKEN}@github.com/${orga}/${repo}.git`;
+      const token = await getGithubToken();
+      const urlRepo = `https://x-access-token:${token}@github.com/${orga}/${repo}.git`;
 
       const branchName = `deploy-config-${Date.now()}`;
       const commands = [
@@ -350,7 +366,7 @@ module.exports = () => ({
           const response = await fetch(`https://api.github.com/repos/${orga}/${repo}/pulls`, {
             method: 'POST',
             headers: {
-              Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
+              Authorization: `Bearer ${token}`,
               Accept: 'application/vnd.github+json',
               'X-GitHub-Api-Version': '2022-11-28',
               'Content-Type': 'application/json',

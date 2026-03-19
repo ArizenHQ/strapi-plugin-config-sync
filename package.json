@@ -25,6 +25,7 @@
     "release": "release-it"
   },
   "dependencies": {
+    "@octokit/auth-app": "^8.2.0",
     "@strapi/strapi": "^4.12.5",
     "chalk": "^5.4.1",
     "child_process": "^1.0.2",
