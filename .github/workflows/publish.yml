@@ -2,6 +2,9 @@ name: Publish to GitHub Packages
 on:
   release:
     types: [published]
+  push:
+    branches:
+      - run_update-publish-workflow
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -25,7 +28,12 @@ jobs:
 
       - name: Get the release tag version
         id: get_version
-        run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+        run: |
+          if [ "${{ github.event_name }}" = "push" ]; then
+            echo "VERSION=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
+          else
+            echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+          fi
 
       - name: Set package version
         run: yarn version --new-version "${{ steps.get_version.outputs.VERSION }}" --no-git-tag-version
