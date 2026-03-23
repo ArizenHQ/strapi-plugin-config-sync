@@ -1,6 +1,6 @@
 {
   "name": "@arizenhq/strapi-plugin-config-sync",
-  "version": "3.1.19",
+  "version": "3.1.20",
   "description": "Migrate your config data across environments using the CLI or Strapi admin panel.",
   "strapi": {
     "displayName": "Config Sync ArizenHQ",
@@ -25,7 +25,7 @@
     "release": "release-it"
   },
   "dependencies": {
-    "@octokit/auth-app": "^8.2.0",
+    "@octokit/auth-app": "^7.2.2",
     "@strapi/strapi": "^4.12.5",
     "chalk": "^5.4.1",
     "child_process": "^1.0.2",
@@ -74,7 +74,7 @@
     "styled-components": "^6.1.15"
   },
   "engines": {
-    "node": ">=20.x.x",
+    "node": ">=18.x.x",
     "npm": ">=6.0.0"
   },
   "publishConfig": {
