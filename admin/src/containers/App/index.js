@@ -11,7 +11,9 @@ import { CheckPagePermissions } from '@strapi/helper-plugin';
 
 import pluginPermissions from '../../permissions';
 import Header from '../../components/Header';
-import { store } from "../../helpers/configureStore";
+import configureStore from "../../helpers/configureStore";
+
+const store = configureStore();
 import ConfigPage from '../ConfigPage';
 
 const App = () => {
