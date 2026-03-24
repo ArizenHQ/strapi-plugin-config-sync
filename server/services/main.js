@@ -10,7 +10,7 @@ const { logMessage } = require('../utils');
 
 const getGithubToken = async () => {
   const appId = process.env.GH_APP_ID;
-  const privateKey = process.env.GH_APP_PRIVATE_KEY;
+  const privateKey = process.env.GH_APP_PRIVATE_KEY?.replace(/\\n/g, '\n');
   const installationId = process.env.GH_APP_INSTALLATION_ID;
 
   if (!appId || !privateKey || !installationId) {
