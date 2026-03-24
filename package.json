@@ -1,6 +1,6 @@
 {
   "name": "@arizenhq/strapi-plugin-config-sync",
-  "version": "3.1.22",
+  "version": "3.1.23",
   "description": "Migrate your config data across environments using the CLI or Strapi admin panel.",
   "strapi": {
     "displayName": "Config Sync ArizenHQ",
@@ -32,7 +32,7 @@
     "cli-table": "^0.3.11",
     "commander": "^13.1.0",
     "git-diff": "^2.0.6",
-    "immutable": "^5.0.3",
+    "immutable": "^4.3.7",
     "inquirer": "^12.4.2",
     "react-diff-viewer-continued": "3.4.0",
     "redux-immutable": "^4.0.0",
