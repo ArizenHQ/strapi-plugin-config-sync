@@ -4,7 +4,19 @@
  *
  */
 
-import { request } from '@strapi/helper-plugin';
+const request = async (url, { method = 'GET', body } = {}) => {
+  const token = JSON.parse(sessionStorage.getItem('jwtToken') || localStorage.getItem('jwtToken') || 'null');
+  const res = await fetch(`/api${url}`, {
+    method,
+    headers: {
+      'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+    ...(body ? { body: JSON.stringify(body) } : {}),
+  });
+  if (!res.ok) throw new Error(res.statusText);
+  return res.json();
+};
 
 export function getAllConfigDiff(toggleNotification) {
   return async function(dispatch) {
