@@ -6,7 +6,7 @@
 
 const request = async (url, { method = 'GET', body } = {}) => {
   const token = JSON.parse(sessionStorage.getItem('jwtToken') || localStorage.getItem('jwtToken') || 'null');
-  const res = await fetch(`/config-sync${url}`, {
+  const res = await fetch(url, {
     method,
     headers: {
       'Content-Type': 'application/json',
