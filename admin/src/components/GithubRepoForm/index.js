@@ -1,6 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { TextInput, Card, Button, Box } from '@strapi/design-system';
-import { request } from '@strapi/helper-plugin';
+const request = async (url, { method = 'GET', body } = {}) => {
+  const token = JSON.parse(sessionStorage.getItem('jwtToken') || localStorage.getItem('jwtToken') || 'null');
+  const res = await fetch(url, {
+    method,
+    headers: {
+      'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+    ...(body ? { body: JSON.stringify(body) } : {}),
+  });
+  if (!res.ok) throw new Error(res.statusText);
+  return res.json();
+};
 
 const GithubRepoForm = ({ value, onChange }) => {
   const [githubRepo, setGithubRepo] = useState(value);

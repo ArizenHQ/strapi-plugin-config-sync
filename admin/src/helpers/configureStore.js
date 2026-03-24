@@ -1,5 +1,5 @@
 import { createStore, applyMiddleware, compose } from 'redux';
-import thunkMiddleware from 'redux-thunk';
+import { thunk as thunkMiddleware } from 'redux-thunk';
 import { Map } from 'immutable';
 
 import rootReducer from '../state/reducers';
@@ -43,5 +43,3 @@ const configureStore = () => {
 };
 
 export default configureStore;
-
-export const store = configureStore();
