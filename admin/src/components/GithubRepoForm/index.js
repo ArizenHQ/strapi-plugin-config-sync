@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { TextInput, Card, Button, Box } from '@strapi/design-system';
 const request = async (url, { method = 'GET', body } = {}) => {
   const token = JSON.parse(sessionStorage.getItem('jwtToken') || localStorage.getItem('jwtToken') || 'null');
-  const res = await fetch(`/api${url}`, {
+  const res = await fetch(`/config-sync${url}`, {
     method,
     headers: {
       'Content-Type': 'application/json',
