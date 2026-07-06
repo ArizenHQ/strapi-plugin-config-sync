@@ -21,7 +21,7 @@
     "yalc": "^1.0.0-pre.53"
   },
   "dependencies": {
-    "@arizenhq/strapi-plugin-config-sync": "file:.yalc/@arizenhq/strapi-plugin-config-sync",
+    "@arizenhq/strapi-plugin-config-sync": "link:.yalc/@arizenhq/strapi-plugin-config-sync",
     "@strapi/plugin-cloud": "5.37.1",
     "@strapi/plugin-users-permissions": "5.37.1",
     "@strapi/strapi": "5.37.1",

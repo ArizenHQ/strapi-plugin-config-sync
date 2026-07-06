@@ -42,8 +42,10 @@ jobs:
           cache: 'yarn'
       - name: Install dependencies plugin
         run: yarn --no-lockfile --unsafe-perm
-      - name: Push the package to yalc
+      - name: Build plugin
         run: yarn build
+      - name: Push the package to yalc
+        run: npx yalc push --publish
       - name: Add yalc package to the playground
         run: yarn playground:yalc-add
       - name: Install dependencies playground
