@@ -9,6 +9,10 @@
   "popUpWarning.force": "Force",
   "popUpWarning.Confirmation": "Confirmation",
 
+  "envWarning.production.heading": "You're in the production environment",
+  "envWarning.production.message_1": "Please be careful when syncing your config in production.",
+  "envWarning.production.message_2": "Make sure you are not overriding critical config changes on import.",
+
   "Header.Title": "Config Sync",
   "Header.Description": "Manage your database config across environments.",
 
@@ -28,8 +32,13 @@
   "ConfigDiff.Database": "Database",
 
   "Buttons.Export": "Export",
+  "Buttons.DownloadConfig": "Download Config",
   "Buttons.Import": "Import",
   "Buttons.DeployProduction": "Create Pull Request",
+
+  "popUpWarning.warning.deploy_1": "Deploying to production will apply all configuration changes",
+  "popUpWarning.warning.deploy_2": "and cannot be undone. Are you sure you want to continue?",
+  "popUpWarning.button.deploy-production": "Yes, Create Pull Request",
 
   "FirstExport.Message": "Looks like this is your first time using config-sync for this project.",
   "FirstExport.Button": "Make the initial export",

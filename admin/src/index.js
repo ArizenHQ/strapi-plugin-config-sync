@@ -1,6 +1,6 @@
-import { prefixPluginTranslations } from '@strapi/helper-plugin';
 import pluginPkg from '../../package.json';
 import pluginId from './helpers/pluginId';
+import { prefixPluginTranslations } from './helpers/prefixPluginTranslations';
 import pluginPermissions from './permissions';
 // import pluginIcon from './components/PluginIcon';
 // import getTrad from './helpers/getTrad';
@@ -30,17 +30,11 @@ export default {
         {
           intlLabel: {
             id: `${pluginId}.Settings.Tool.Title`,
-            defaultMessage: 'Tools',
+            defaultMessage: 'Interface',
           },
           id: 'config-sync-page',
-          to: `/settings/${pluginId}`,
-          Component: async () => {
-            const component = await import(
-              /* webpackChunkName: "config-sync-settings-page" */ './containers/App'
-            );
-
-            return component;
-          },
+          to: `${pluginId}`,
+          Component: () => import('./containers/App'),
           permissions: pluginPermissions['settings'],
         },
       ],
@@ -50,9 +44,7 @@ export default {
   async registerTrads({ locales }) {
     const importedTrads = await Promise.all(
       locales.map((locale) => {
-        return import(
-          /* webpackChunkName: "config-sync-translation-[request]" */ `./translations/${locale}.json`
-        )
+        return import(`./translations/${locale}.json`)
           .then(({ default: data }) => {
             return {
               data: prefixPluginTranslations(data, pluginId),

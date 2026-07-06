@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = {
+export default {
   type: 'admin',
   routes: [
     {
@@ -23,6 +23,14 @@ module.exports = {
       method: "GET",
       path: "/diff",
       handler: "config.getDiff",
+      config: {
+        policies: [],
+      },
+    },
+    {
+      method: "GET",
+      path: "/zip",
+      handler: "config.zipConfig",
       config: {
         policies: [],
       },

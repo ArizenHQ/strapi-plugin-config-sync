@@ -1,9 +1,9 @@
 'use strict';
 
-const config = require('./config');
-const settings = require('./settings');
+import config from './config';
+import settings from './settings';
 
-module.exports = {
-  config: config,
-  settings: settings,
+export default {
+  config,
+  settings,
 };

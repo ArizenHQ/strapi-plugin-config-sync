@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = {
+export default {
   default: {
     syncDir: "config/sync/",
     minify: false,
@@ -14,6 +14,7 @@ module.exports = {
       "core-store.plugin_upload_api-folder",
       "core-store.strapi_content_types_schema",
       "core-store.ee_information",
+      "core-store.core_admin_project-settings",
     ],
     githubRepositoryConfigSync: "git@github.com:ArizenHQ/coinhouse-cms.git",
   },

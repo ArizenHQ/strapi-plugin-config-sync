@@ -2,9 +2,6 @@ name: Publish to GitHub Packages
 on:
   release:
     types: [published]
-  push:
-    branches:
-      - run_update-publish-workflow
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -18,7 +15,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
           cache: 'yarn'
           registry-url: 'https://npm.pkg.github.com'
           scope: '@arizenhq'
@@ -26,14 +23,12 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
+      - name: Build the plugin
+        run: yarn build
+
       - name: Get the release tag version
         id: get_version
-        run: |
-          if [ "${{ github.event_name }}" = "push" ]; then
-            echo "VERSION=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
-          else
-            echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
-          fi
+        run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
 
       - name: Set package version
         run: yarn version --new-version "${{ steps.get_version.outputs.VERSION }}" --no-git-tag-version

@@ -1,7 +1,7 @@
-const { isEmpty } = require('lodash');
-const { logMessage, sanitizeConfig, dynamicSort, noLimit, getCombinedUid, getCombinedUidWhereFilter, getUidParamsFromName } = require('../utils');
-const { difference, same } = require('../utils/getArrayDiff');
-const queryFallBack = require('../utils/queryFallBack');
+import isEmpty from 'lodash/isEmpty';
+import { logMessage, sanitizeConfig, dynamicSort, noLimit, getCombinedUid, getCombinedUidWhereFilter, getUidParamsFromName } from '../utils';
+import { difference, same } from '../utils/getArrayDiff';
+import queryFallBack from '../utils/queryFallBack';
 
 const ConfigType = class ConfigType {
   constructor({ queryString, configName, uid, jsonFields, relations, components }) {
@@ -39,10 +39,10 @@ const ConfigType = class ConfigType {
    */
   importSingle = async (configName, configContent, force) => {
     // Check if the config should be excluded.
-    const shouldExclude = !isEmpty(strapi.config.get('plugin.config-sync.excludedConfig').filter((option) => `${this.configPrefix}.${configName}`.startsWith(option)));
+    const shouldExclude = !isEmpty(strapi.config.get('plugin::config-sync.excludedConfig').filter((option) => `${this.configPrefix}.${configName}`.startsWith(option)));
     if (shouldExclude) return;
 
-    const softImport = strapi.config.get('plugin.config-sync.soft');
+    const softImport = strapi.config.get('plugin::config-sync.soft');
     const queryAPI = strapi.query(this.queryString);
     const uidParams = getUidParamsFromName(this.uidKeys, configName);
     const combinedUidWhereFilter = getCombinedUidWhereFilter(this.uidKeys, uidParams);
@@ -109,7 +109,10 @@ const ConfigType = class ConfigType {
       if (softImport && !force) return false;
 
       // Format JSON fields.
-      configContent = sanitizeConfig(configContent);
+      configContent = sanitizeConfig({
+        config: configContent,
+        configName,
+      });
       const query = { ...configContent };
       this.jsonFields.map((field) => query[field] = JSON.stringify(configContent[field]));
 
@@ -120,8 +123,8 @@ const ConfigType = class ConfigType {
       // Delete/create relations.
       await Promise.all(this.relations.map(async ({ queryString, relationName, parentName, relationSortFields }) => {
         const relationQueryApi = strapi.query(queryString);
-        existingConfig = sanitizeConfig(existingConfig, relationName, relationSortFields);
-        configContent = sanitizeConfig(configContent, relationName, relationSortFields);
+        existingConfig = sanitizeConfig({ config: existingConfig, configName, relation: relationName, relationSortFields });
+        configContent = sanitizeConfig({ config: configContent, configName, relation: relationName, relationSortFields });
 
         const configToAdd = difference(configContent[relationName], existingConfig[relationName], relationSortFields);
         const configToDelete = difference(existingConfig[relationName], configContent[relationName], relationSortFields);
@@ -170,11 +173,11 @@ const ConfigType = class ConfigType {
    * @param {string} configName - The name of the config file.
    * @returns {void}
    */
-   exportSingle = async (configName) => {
+  exportSingle = async (configName) => {
     const formattedDiff = await strapi.plugin('config-sync').service('main').getFormattedDiff(this.configPrefix);
 
     // Check if the config should be excluded.
-    const shouldExclude = !isEmpty(strapi.config.get('plugin.config-sync.excludedConfig').filter((option) => configName.startsWith(option)));
+    const shouldExclude = !isEmpty(strapi.config.get('plugin::config-sync.excludedConfig').filter((option) => configName.startsWith(option)));
     if (shouldExclude) return;
 
     const currentConfig = formattedDiff.databaseConfig[configName];
@@ -190,6 +193,17 @@ const ConfigType = class ConfigType {
     }
   }
 
+
+  /**
+   * Zip config files
+   *
+   * @param {string} configName - The name of the zip archive.
+   * @returns {void}
+   */
+  zipConfig = async () => {
+    return strapi.plugin('config-sync').service('main').zipConfigFiles();
+  }
+
   /**
    * Get all role-permissions config from the db.
    *
@@ -201,7 +215,7 @@ const ConfigType = class ConfigType {
     });
     const configs = {};
 
-    await Promise.all(Object.values(AllConfig).map(async (config) => {
+    await Promise.all(Object.entries(AllConfig).map(async ([configName, config]) => {
       const combinedUid = getCombinedUid(this.uidKeys, config);
       const combinedUidWhereFilter = getCombinedUidWhereFilter(this.uidKeys, config);
 
@@ -211,16 +225,16 @@ const ConfigType = class ConfigType {
       }
 
       // Check if the config should be excluded.
-      const shouldExclude = !isEmpty(strapi.config.get('plugin.config-sync.excludedConfig').filter((option) => `${this.configPrefix}.${combinedUid}`.startsWith(option)));
+      const shouldExclude = !isEmpty(strapi.config.get('plugin::config-sync.excludedConfig').filter((option) => `${this.configPrefix}.${combinedUid}`.startsWith(option)));
       if (shouldExclude) return;
 
-      const formattedConfig = { ...sanitizeConfig(config) };
+      const formattedConfig = { ...sanitizeConfig({ config, configName }) };
       await Promise.all(this.relations.map(async ({ queryString, relationName, relationSortFields, parentName }) => {
         const relations = await noLimit(strapi.query(queryString), {
           where: { [parentName]: combinedUidWhereFilter },
         });
 
-        relations.map((relation) => sanitizeConfig(relation));
+        relations.map((relation) => sanitizeConfig({ config: relation, configName: relationName }));
         relationSortFields.map((sortField) => {
           relations.sort(dynamicSort(sortField));
         });
@@ -240,7 +254,7 @@ const ConfigType = class ConfigType {
    *
    * @returns {void}
    */
-   importAll = async () => {
+  importAll = async () => {
     // The main.importAllConfig service will loop the core-store.importSingle service.
     await strapi.plugin('config-sync').service('main').importAllConfig(this.configPrefix);
   }
@@ -250,20 +264,10 @@ const ConfigType = class ConfigType {
    *
    * @returns {void}
    */
-   exportAll = async () => {
+  exportAll = async () => {
     // The main.importAllConfig service will loop the core-store.importSingle service.
     await strapi.plugin('config-sync').service('main').exportAllConfig(this.configPrefix);
   }
-
-    /**
-   * Export all core-store config to files.
-   *
-   * @returns {void}
-   */
-  deployProduction = async () => {
-    // The main.importAllConfig service will loop the core-store.importSingle service.
-    await strapi.plugin('config-sync').service('main').deployProductionConfig(this.configPrefix);
-  }
 };
 
-module.exports = ConfigType;
+export default ConfigType;

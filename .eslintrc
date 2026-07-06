@@ -25,7 +25,29 @@
   "globals": {
     "strapi": true
   },
+  "overrides": [
+    {
+      "files": [
+        "**/*.cy.*",
+        "./cypress/**/*.*"
+      ],
+      "extends": [
+        "plugin:cypress/recommended"
+      ],
+      "parserOptions": {
+        "project": "./tsconfig.cypress.json"
+      }
+    }
+  ],
   "rules": {
+    "import/no-unresolved": [2, {
+      "ignore": [
+        "@strapi/strapi/admin",
+        "@strapi/icons/symbols",
+        "@strapi/admin/strapi-admin"
+      ]
+    }],
+
     "template-curly-spacing" : "off",
 
     "indent" : "off",
