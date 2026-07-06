@@ -52,8 +52,6 @@ jobs:
         run: cd playground && yarn install --unsafe-perm
       - name: Build playground
         run: yarn playground:build
-      # - name: Run unit tests
-      #   run: yarn test:unit
       - name: Run integration tests
         run: yarn run -s test:integration
       - name: Run end-to-end tests
