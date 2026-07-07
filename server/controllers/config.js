@@ -1,28 +1,24 @@
 'use strict';
 
-const fs = require('fs');
-const { isEmpty } = require('lodash');
+import fs from 'fs';
+import isEmpty from 'lodash/isEmpty';
 
 /**
  * Main controllers for config import/export.
  */
 
-module.exports = {
+export default {
   /**
-   * Deploy all config, from db to filesystem.
+   * Deploy config changes to production via GitHub PR.
    *
    * @param {object} ctx - Request context object.
    * @returns {void}
    */
   deployProduction: async (ctx) => {
     try {
-      await strapi.plugin('config-sync').service('main').deployProductionConfig(ctx.state.user);
-
-      ctx.send({
-        message: 'Config was successfully deployed to production.',
-      });
+      const message = await strapi.plugin('config-sync').service('main').deployProductionConfig(ctx.state.user);
+      ctx.send({ message });
     } catch (error) {
-      console.error(`Failed to deploy production config. Error: ${error.message}`);
       ctx.throw(400, `Failed to deploy production config. Error: ${error.message}`);
     }
   },
@@ -44,7 +40,7 @@ module.exports = {
 
 
     ctx.send({
-      message: `Config was successfully exported to ${strapi.config.get('plugin.config-sync.syncDir')}.`,
+      message: `Config was successfully exported to ${strapi.config.get('plugin::config-sync.syncDir')}.`,
     });
   },
 
@@ -56,7 +52,7 @@ module.exports = {
    */
   importAll: async (ctx) => {
     // Check for existance of the config file sync dir.
-    if (!fs.existsSync(strapi.config.get('plugin.config-sync.syncDir'))) {
+    if (!fs.existsSync(strapi.config.get('plugin::config-sync.syncDir'))) {
       ctx.send({
         message: 'No config files were found.',
       });
@@ -92,7 +88,7 @@ module.exports = {
    */
   getDiff: async (ctx) => {
     // Check for existance of the config file sync dir.
-    if (!fs.existsSync(strapi.config.get('plugin.config-sync.syncDir'))) {
+    if (!fs.existsSync(strapi.config.get('plugin::config-sync.syncDir'))) {
       ctx.send({
         message: 'No config files were found.',
       });
@@ -103,6 +99,19 @@ module.exports = {
     return strapi.plugin('config-sync').service('main').getFormattedDiff();
   },
 
+  zipConfig: async (ctx) => {
+    // Check for existance of the config file sync dir.
+    if (!fs.existsSync(strapi.config.get('plugin::config-sync.syncDir'))) {
+      ctx.send({
+        message: 'No config files were found.',
+      });
+
+      return;
+    }
+
+    return strapi.plugin('config-sync').service('main').zipConfigFiles();
+  },
+
   /**
    * Get the current Strapi env.
    * @returns {string} The current Strapi environment.
@@ -110,7 +119,7 @@ module.exports = {
   getAppEnv: async () => {
     return {
       env: strapi.server.app.env,
-      config: strapi.config.get('plugin.config-sync'),
+      config: strapi.config.get('plugin::config-sync'),
     };
   },
 };

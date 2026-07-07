@@ -1,5 +1,5 @@
 import { createStore, applyMiddleware, compose } from 'redux';
-import { thunk as thunkMiddleware } from 'redux-thunk';
+import { thunk } from 'redux-thunk';
 import { Map } from 'immutable';
 
 import rootReducer from '../state/reducers';
@@ -10,7 +10,7 @@ const configureStore = () => {
 
   const enhancers = [];
   const middlewares = [
-    thunkMiddleware,
+    thunk,
   ];
 
   let devtools;
@@ -43,3 +43,5 @@ const configureStore = () => {
 };
 
 export default configureStore;
+
+export const store = configureStore();

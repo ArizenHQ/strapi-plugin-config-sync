@@ -1,9 +1,9 @@
 'use strict';
 
-const main = require('./main');
-const settings = require('./settings');
+import main from './main';
+import settings from './settings';
 
-module.exports = {
+export default {
   main,
   settings,
 };

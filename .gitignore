@@ -9,3 +9,13 @@ files
 .DS_Store
 npm-debug.log
 .idea
+
+# Production build
+build
+dist
+bundle
+
+# Cypress
+cypress/screenshots/
+cypress/videos/
+cypress/downloads/

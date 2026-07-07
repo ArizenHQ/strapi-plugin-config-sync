@@ -1,29 +1,21 @@
-module.exports = {
+'use strict';
+
+export default {
   async getSettings(ctx) {
     try {
-      const config = await strapi
-        .plugin("config-sync")
-        .service("settings")
-        .getSettings();
+      const config = await strapi.plugin('config-sync').service('settings').getSettings();
       ctx.send({ config });
     } catch (err) {
-      console.error("getConfiguration ~ err:", err);
-      ctx.send({ error: err.message }, 500);
+      ctx.throw(500, err.message);
     }
   },
 
   async setSettings(ctx) {
     try {
-      const newConfig = ctx.request.body;
-      await strapi
-        .plugin("config-sync")
-        .service("settings")
-        .setSettings(newConfig);
-      ctx.send({ message: "Configuration updated successfully" });
+      await strapi.plugin('config-sync').service('settings').setSettings(ctx.request.body);
+      ctx.send({ message: 'Configuration updated successfully' });
     } catch (err) {
-      console.error("updateConfiguration ~ err:", err);
-      ctx.send({ error: err.message }, 500);
+      ctx.throw(500, err.message);
     }
   },
 };
-

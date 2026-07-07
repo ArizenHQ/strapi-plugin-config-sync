@@ -7,16 +7,18 @@ function getPluginStore() {
     name: 'config-sync',
   });
 }
+
 async function createDefaultConfig() {
   const pluginStore = getPluginStore();
   const value = {
     disabled: false,
+    githubRepositoryConfigSync: strapi.config.get('plugin::config-sync.githubRepositoryConfigSync'),
   };
   await pluginStore.set({ key: 'settings', value });
   return pluginStore.get({ key: 'settings' });
 }
 
-module.exports = {
+export default {
   async getSettings() {
     const pluginStore = getPluginStore();
     let config = await pluginStore.get({ key: 'settings' });
@@ -25,10 +27,10 @@ module.exports = {
     }
     return config;
   },
+
   async setSettings(settings) {
-    const value = settings;
     const pluginStore = getPluginStore();
-    await pluginStore.set({ key: 'settings', value });
+    await pluginStore.set({ key: 'settings', value: settings });
     return pluginStore.get({ key: 'settings' });
   },
 };

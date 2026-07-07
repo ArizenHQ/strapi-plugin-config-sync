@@ -1,10 +1,10 @@
 'use strict';
 
-const fs = require('fs');
+import fs from 'fs';
 
-const ConfigType = require('./config/type');
-const defaultTypes = require('./config/types');
-const { logMessage } = require('./utils');
+import ConfigType from './config/type';
+import defaultTypes from './config/types';
+import { logMessage } from './utils';
 
 /**
  * An asynchronous bootstrap function that runs before
@@ -16,28 +16,28 @@ const { logMessage } = require('./utils');
  * See more details here: https://strapi.io/documentation/v3.x/concepts/configurations.html#bootstrap
  */
 
-module.exports = async () => {
+export default async () => {
   // Register config types.
   const registerTypes = () => {
     const types = {};
 
     // The default types provided by the plugin.
     defaultTypes(strapi).map((type) => {
-      if (!strapi.config.get('plugin.config-sync.excludedTypes').includes(type.configName)) {
+      if (!strapi.config.get('plugin::config-sync.excludedTypes').includes(type.configName)) {
         types[type.configName] = new ConfigType(type);
       }
     });
 
     // The types provided by other plugins.
     strapi.plugin('config-sync').pluginTypes.map((type) => {
-      if (!strapi.config.get('plugin.config-sync.excludedTypes').includes(type.configName)) {
+      if (!strapi.config.get('plugin::config-sync.excludedTypes').includes(type.configName)) {
         types[type.configName] = new ConfigType(type);
       }
     });
 
     // The custom types provided by the user.
-    strapi.config.get('plugin.config-sync.customTypes').map((type) => {
-      if (!strapi.config.get('plugin.config-sync.excludedTypes').includes(type.configName)) {
+    strapi.config.get('plugin::config-sync.customTypes').map((type) => {
+      if (!strapi.config.get('plugin::config-sync.excludedTypes').includes(type.configName)) {
         types[type.configName] = new ConfigType(type);
       }
     });
@@ -47,10 +47,12 @@ module.exports = async () => {
   strapi.plugin('config-sync').types = registerTypes();
 
   // Import on bootstrap.
-  if (strapi.config.get('plugin.config-sync.importOnBootstrap')) {
+  if (strapi.config.get('plugin::config-sync.importOnBootstrap')) {
     if (strapi.server.app.env === 'development') {
       strapi.log.warn(logMessage(`You can't use the 'importOnBootstrap' setting in the development env.`));
-    } else if (fs.existsSync(strapi.config.get('plugin.config-sync.syncDir'))) {
+    } else if (process.env.CONFIG_SYNC_CLI === 'true') {
+      strapi.log.warn(logMessage(`The 'importOnBootstrap' setting was ignored because Strapi was started from the config-sync CLI itself.`));
+    } else if (fs.existsSync(strapi.config.get('plugin::config-sync.syncDir'))) {
       await strapi.plugin('config-sync').service('main').importAllConfig();
     }
   }
